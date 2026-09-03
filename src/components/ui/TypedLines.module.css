@@ -1,0 +1,34 @@
+.lines {
+  display: block;
+}
+
+/* Each line is a ghost of the finished text holding the box open, with the
+   live text laid over it. Nothing below the heading moves as characters come
+   and go, and the cursor is a real inline sibling of the typed text, so it
+   follows the typing instead of being positioned by hand. */
+.line {
+  display: block;
+  position: relative;
+}
+
+.ghost {
+  visibility: hidden;
+}
+
+.live {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  white-space: pre;
+}
+
+/* The animated text is aria-hidden; this carries the real name for screen
+   readers and gives the heading its accessible name. */
+.reader {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

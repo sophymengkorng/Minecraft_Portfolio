@@ -3,16 +3,14 @@
 import { useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { resolveCommand } from "@/modules/portfolio/navigation";
+import { navigateToSection, navigateToTop } from "@/modules/portfolio/scroll";
 import styles from "./CommandBar.module.css";
 
-function prefersReducedMotion(): boolean {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
 /**
- * The one client island on the page. Nav links and hero buttons are plain
- * anchors handled by `scroll-behavior: smooth`; only this bar needs JS, because
- * it resolves free text and supports the `top` keyword, which is not an anchor.
+ * `cd projects` lands on the same route a click on the nav does — both go
+ * through `scroll.ts`, so the address bar and the scroll position never
+ * disagree. This bar exists because it resolves free text and supports `top`,
+ * which no link points at.
  */
 export function CommandBar() {
   const [input, setInput] = useState("");
@@ -21,29 +19,24 @@ export function CommandBar() {
 
   function handleEnter() {
     const command = resolveCommand(input);
-    const behavior: ScrollBehavior = prefersReducedMotion() ? "auto" : "smooth";
 
     switch (command.kind) {
       case "noop":
         return;
 
       case "top":
-        window.scrollTo({ top: 0, behavior });
+        navigateToTop();
         setInput("");
         setMessage(command.message);
         setFailed(false);
         return;
 
-      case "section": {
-        // `scroll-margin-top` on the section clears the sticky titlebar.
-        document
-          .getElementById(command.elementId)
-          ?.scrollIntoView({ behavior, block: "start" });
+      case "section":
+        navigateToSection(command.section);
         setInput("");
         setMessage(command.message);
         setFailed(false);
         return;
-      }
 
       case "unknown":
         setMessage(command.message);

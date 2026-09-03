@@ -1,5 +1,6 @@
 import { Container } from "@/components/ui/Container";
-import { SECTION_IDS, SECTION_ORDER } from "@/modules/portfolio/constants";
+import { SECTION_ORDER } from "@/modules/portfolio/constants";
+import { sectionHref } from "@/modules/portfolio/navigation";
 import { siteConfig } from "@/config/site";
 import styles from "./Titlebar.module.css";
 
@@ -15,7 +16,7 @@ export function Titlebar() {
         <div className={styles.path}>{siteConfig.shellPath}</div>
         <nav className={styles.nav} aria-label="Sections">
           {SECTION_ORDER.map((section) => (
-            <a key={section} href={`#${SECTION_IDS[section]}`}>
+            <a key={section} href={sectionHref(section)}>
               {section}
             </a>
           ))}
