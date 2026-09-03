@@ -1,0 +1,53 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: 32px;
+  align-items: start;
+}
+
+.bio {
+  font-size: 14.5px;
+  line-height: 1.9;
+  color: var(--body);
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.meta {
+  display: grid;
+  gap: 9px;
+  font-size: 12px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px dashed var(--line);
+  padding-bottom: 7px;
+}
+
+/* The last row carries no rule. */
+.row:last-child {
+  border-bottom: 0;
+}
+
+.row dt,
+.row dd {
+  margin: 0;
+}
+
+.label {
+  color: var(--cy-faint);
+}
+
+.accent {
+  color: var(--cy);
+}
+
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+}

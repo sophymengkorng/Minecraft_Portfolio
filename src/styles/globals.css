@@ -1,0 +1,87 @@
+@import "./tokens.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border-radius: var(--radius);
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--backdrop);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--backdrop);
+  color: var(--ink);
+  font-family: var(--font-body);
+  /* Antialiasing softens the bitmap font and kills the effect. */
+  -webkit-font-smoothing: none;
+}
+
+a {
+  color: var(--cy);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--mg);
+}
+
+input {
+  font-family: inherit;
+}
+
+::selection {
+  background: var(--mg);
+  color: var(--bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--cy);
+  outline-offset: 2px;
+}
+
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes flick {
+  0%,
+  100% {
+    opacity: 0.03;
+  }
+  50% {
+    opacity: 0.05;
+  }
+}
+
+@media (max-width: 760px) {
+  :root {
+    --content-width: 100%;
+  }
+}
+
+/* Freeze the flicker and the blink; the static scanlines stay. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

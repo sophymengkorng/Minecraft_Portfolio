@@ -1,0 +1,10 @@
+.kicker {
+  font-size: 12px;
+  color: var(--cy-faint);
+  margin: 0 0 20px;
+}
+
+/* Skills, projects and contact sit 22px off their kicker; hero and about, 20px. */
+.wide {
+  margin-bottom: 22px;
+}

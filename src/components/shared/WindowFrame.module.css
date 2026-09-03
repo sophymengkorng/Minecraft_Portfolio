@@ -1,0 +1,27 @@
+.page {
+  min-height: 100vh;
+  background: var(--backdrop);
+}
+
+.frame {
+  position: relative;
+  width: var(--frame-width);
+  min-height: 100vh;
+  margin: 0 auto;
+  background: var(--bg2);
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  position: relative;
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Pushes the command bar to the bottom edge on short pages. */
+.content > main {
+  flex: 1;
+}

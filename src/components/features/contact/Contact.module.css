@@ -1,0 +1,37 @@
+.contact {
+  padding: 48px 0 56px;
+  scroll-margin-top: calc(var(--titlebar-height) + 8px);
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-size: 30px;
+  line-height: 1.45;
+  margin: 0 0 28px;
+  font-weight: 400;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.chip {
+  font-family: var(--font-display);
+  font-size: 10px;
+  padding: 13px 16px;
+  border: 3px solid var(--line);
+  color: var(--cy-faint);
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .contact {
+    padding: 36px 0 44px;
+  }
+
+  .headline {
+    font-size: 22px;
+  }
+}

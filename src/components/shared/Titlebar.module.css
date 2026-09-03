@@ -1,0 +1,61 @@
+.titlebar {
+  position: sticky;
+  top: 0;
+  z-index: 7;
+  padding: 9px 0;
+  border-bottom: 3px solid var(--line);
+  background: var(--panel);
+}
+
+.lights {
+  display: flex;
+  gap: 6px;
+}
+
+.light {
+  width: 11px;
+  height: 11px;
+}
+
+.light:nth-child(1) {
+  background: var(--mg);
+}
+
+.light:nth-child(2) {
+  background: var(--cy-dim);
+}
+
+.light:nth-child(3) {
+  background: var(--cy);
+}
+
+.path {
+  font-family: var(--font-display);
+  font-size: 10px;
+  color: var(--cy-dim);
+}
+
+.nav {
+  margin-left: auto;
+  display: flex;
+  gap: 14px;
+  font-size: 10px;
+}
+
+.nav a {
+  color: var(--cy-faint);
+}
+
+.nav a:hover {
+  color: var(--mg);
+}
+
+@media (max-width: 480px) {
+  .path {
+    display: none;
+  }
+
+  .nav {
+    gap: 10px;
+  }
+}

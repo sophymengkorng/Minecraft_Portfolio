@@ -1,0 +1,12 @@
+.section {
+  padding: 40px 0;
+  border-bottom: 3px solid var(--line);
+  /* Clears the sticky titlebar when an anchor or the command bar jumps here. */
+  scroll-margin-top: calc(var(--titlebar-height) + 8px);
+}
+
+@media (max-width: 760px) {
+  .section {
+    padding: 32px 0;
+  }
+}
