@@ -27,10 +27,48 @@
   /* The frame is full-bleed; the content inside it sits on an 80% measure. */
   --frame-width: 100%;
   --content-width: 80%;
-  /* Measured: 9px + 9px padding + 13px line + 3px border. */
-  --titlebar-height: 34px;
+  /* The chrome bars are set to these heights explicitly (rather than measured
+     from padding + a fluid font), so the section height and the anchor offsets
+     derived from them are exact at every viewport width. */
+  --titlebar-height: 56px;
+  --commandbar-height: 56px;
+  /* Each section fills the screen between the two sticky chrome bars. */
+  --section-min-height: calc(100vh - var(--titlebar-height) - var(--commandbar-height));
+  --section-min-height: calc(100svh - var(--titlebar-height) - var(--commandbar-height));
 
-  /* Type */
-  --font-display: var(--font-silkscreen), monospace;
-  --font-body: var(--font-jetbrains-mono), ui-monospace, monospace;
+  /* Fluid type scale.
+     Every ramp is built as `slope*vw + basepx` so it lands exactly on the
+     handoff's authored size at ~1440px (a laptop), holds a readable floor on
+     phones, and grows ~14% on large desktop / 5K displays instead of shrinking
+     into the corner. Authored size is noted after each token. */
+  --fs-hero: clamp(38px, 4.4vw, 92px); /* ~63 at 1440 */
+  --fs-kicker: clamp(12px, 0.6vw + 7.4px, 22px); /* ~16 at 1440 */
+  --fs-role: clamp(13px, 0.76vw + 6px, 26px); /* ~17 at 1440 */
+  --fs-alias: clamp(12px, 0.66vw + 5.5px, 23px); /* ~15 at 1440 */
+  --fs-pitch: clamp(15px, 0.97vw + 8px, 30px); /* ~22 at 1440 */
+  --fs-headline: clamp(19px, 2.1vw, 34px); /* 30 */
+  --fs-index: clamp(16px, 0.583vw + 11.6px, 22.8px); /* 20 */
+  /* Larger ramps for the two sections that carry little content, so they read
+     at full-screen height. Same typefaces, bigger sizes. */
+  --fs-group: clamp(12px, 0.7vw + 6px, 22px); /* ~16 at 1440 */
+  --fs-pill-lg: clamp(13px, 0.83vw + 6px, 24px); /* ~18 at 1440 */
+  --fs-meta: clamp(14px, 0.83vw + 8px, 26px); /* ~20 at 1440 */
+  /* About's bio, in the prototype's paragraph treatment - only bigger. */
+  --fs-about: clamp(17px, 1.32vw + 7px, 38px); /* ~26 at 1440 */
+  /* Titlebar and command bar share one chrome size. */
+  --fs-nav: clamp(11px, 0.49vw + 7px, 19px); /* ~14 at 1440 */
+  --fs-body: clamp(13px, 0.423vw + 8.41px, 16.5px); /* 14.5 */
+  --fs-card: clamp(12.5px, 0.394vw + 7.83px, 15.4px); /* 13.5 */
+  --fs-title: clamp(12px, 0.379vw + 7.54px, 14.8px); /* 13 */
+  --fs-pill: clamp(11px, 0.335vw + 6.67px, 13.1px); /* 11.5 */
+  --fs-pill-sm: clamp(10px, 0.306vw + 6.09px, 12px); /* 10.5 */
+  --fs-ui: clamp(11px, 0.49vw + 6px, 19px); /* ~13 at 1440 */
+  --fs-ui-sm: clamp(8.5px, 0.263vw + 5.22px, 10.3px); /* 9 */
+
+  /* Type — Silkscreen (the bitmap face) everywhere. JetBrains Mono stays in the
+     stack as a per-glyph fallback: Silkscreen has no glyph for the arrows, block
+     and chevron the design uses (↗ ▮ ›), and the browser falls back for those
+     characters alone rather than for the whole run. */
+  --font-display: var(--font-silkscreen), var(--font-jetbrains-mono), ui-monospace, monospace;
+  --font-body: var(--font-silkscreen), var(--font-jetbrains-mono), ui-monospace, monospace;
 }

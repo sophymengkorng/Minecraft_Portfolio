@@ -11,7 +11,7 @@ import type { SectionId } from "./types";
 export type NavCommand =
   | { readonly kind: "noop" }
   | { readonly kind: "top"; readonly message: string }
-  | { readonly kind: "section"; readonly section: SectionId; readonly elementId: string; readonly message: string }
+  | { readonly kind: "section"; readonly section: SectionId; readonly message: string }
   | { readonly kind: "unknown"; readonly message: string };
 
 /**
@@ -44,10 +44,22 @@ export function resolveCommand(raw: string): NavCommand {
     return {
       kind: "section",
       section: input,
-      elementId: SECTION_IDS[input],
       message: `→ /${input}`,
     };
   }
 
   return { kind: "unknown", message: `no such directory: ${input}` };
+}
+
+/** The route a section lives at. Sections are bands on one page, not separate
+ *  documents, but each gets a real hash-free URL that is served statically. */
+export function sectionHref(section: SectionId): string {
+  return `/${section}`;
+}
+
+/** The inverse: `/projects`, `/projects/`, `/PROJECTS` → `"projects"`. */
+export function sectionFromPath(pathname: string): SectionId | null {
+  const segment = pathname.replace(/^\/+/, "").replace(/\/+$/, "").toLowerCase();
+
+  return isSectionId(segment) ? segment : null;
 }

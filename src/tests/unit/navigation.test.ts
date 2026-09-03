@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { normalizeCommand, resolveCommand } from "@/modules/portfolio/navigation";
+import {
+  normalizeCommand,
+  resolveCommand,
+  sectionFromPath,
+  sectionHref,
+} from "@/modules/portfolio/navigation";
 
 describe("normalizeCommand", () => {
   it("trims, lowercases, and strips cd / ./ / trailing slash", () => {
@@ -19,19 +24,16 @@ describe("resolveCommand", () => {
     expect(resolveCommand(input)).toEqual({ kind: "top", message: "→ top" });
   });
 
-  it.each([
-    ["about", "b-about"],
-    ["skills", "b-skills"],
-    ["projects", "b-projects"],
-    ["contact", "b-contact"],
-  ])("resolves %s to #%s", (input, elementId) => {
-    expect(resolveCommand(input)).toEqual({
-      kind: "section",
-      section: input,
-      elementId,
-      message: `→ /${input}`,
-    });
-  });
+  it.each(["about", "skills", "projects", "contact"])(
+    "resolves %s to its section",
+    (input) => {
+      expect(resolveCommand(input)).toEqual({
+        kind: "section",
+        section: input,
+        message: `→ /${input}`,
+      });
+    },
+  );
 
   it("reports unknown directories without scrolling", () => {
     expect(resolveCommand("resume")).toEqual({
@@ -43,5 +45,23 @@ describe("resolveCommand", () => {
   it("does not resolve inherited Object.prototype keys as sections", () => {
     expect(resolveCommand("constructor").kind).toBe("unknown");
     expect(resolveCommand("toString").kind).toBe("unknown");
+  });
+});
+
+describe("section routes", () => {
+  it("builds a hash-free href for each section", () => {
+    expect(sectionHref("projects")).toBe("/projects");
+  });
+
+  it("reads the section back off a pathname", () => {
+    expect(sectionFromPath("/projects")).toBe("projects");
+    expect(sectionFromPath("/projects/")).toBe("projects");
+    expect(sectionFromPath("/PROJECTS")).toBe("projects");
+  });
+
+  it("returns null for the home route and for anything unknown", () => {
+    expect(sectionFromPath("/")).toBeNull();
+    expect(sectionFromPath("/resume")).toBeNull();
+    expect(sectionFromPath("/projects/deep")).toBeNull();
   });
 });

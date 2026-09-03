@@ -36,22 +36,23 @@ export const PROJECTS: readonly Project[] = [
     name: "cachewraith-desktop-pet",
     description: "Desktop pet app.",
     stack: ["Tauri 2", "React", "PixiJS", "XState", "Rust"],
-    // Handoff placeholder: points at the profile until the repo URL is confirmed.
-    href: "https://github.com/cachewraith",
+    // Releases rather than the repo: this one is something to download and run.
+    href: "https://github.com/cachewraith/cachewraith-desktop-pet/releases",
   },
   {
     index: "03",
-    name: "Hushstack Cambodia",
-    description: "Team portfolio site.",
-    stack: ["Next.js"],
-    href: "https://hushstackcambodia.site/",
-  },
-  {
-    index: "04",
     name: "Weather Web",
     description: "Next.js weather app.",
     stack: ["Next.js"],
     href: "https://weather.app.hushstackcambodia.site/",
+  },
+  {
+    index: "04",
+    name: "laravel-template-structure",
+    description: "Installer package that scaffolds a layered Laravel architecture.",
+    stack: ["Laravel", "PHP", "Blade", "Sanctum", "Docker"],
+    // Packagist rather than the repo: this one is consumed with `composer require`.
+    href: "https://packagist.org/packages/cachewraith/laravel-template-structure",
   },
 ];
 

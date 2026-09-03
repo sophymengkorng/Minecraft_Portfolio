@@ -1,12 +1,25 @@
 .pill {
-  font-size: 11.5px;
+  font-size: var(--fs-pill);
   padding: 6px 9px;
   border: 2px solid var(--line);
   color: var(--cy-dim);
 }
 
+/* Denser variant, used inside project cards. */
 .small {
-  font-size: 10.5px;
+  font-size: var(--fs-pill-sm);
   padding: 4px 7px;
   color: var(--cy-faint);
+}
+
+/* Bigger box for the skills band, which sits in a full-height section. */
+.large {
+  font-size: var(--fs-pill-lg);
+  padding: 14px 20px;
+}
+
+@media (max-width: 900px) {
+  .large {
+    padding: 9px 13px;
+  }
 }

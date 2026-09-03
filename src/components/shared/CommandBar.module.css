@@ -2,8 +2,11 @@
   position: sticky;
   bottom: 0;
   z-index: 8;
-  padding: 11px 0;
+  height: var(--commandbar-height);
+  display: flex;
+  align-items: center;
   border-top: 3px solid var(--line);
+  box-sizing: border-box;
   background: var(--panel);
 }
 
@@ -13,7 +16,7 @@
 }
 
 .prompt {
-  font-size: 12px;
+  font-size: var(--fs-nav);
   white-space: nowrap;
 }
 
@@ -32,7 +35,7 @@
   border: 0;
   outline: 0;
   color: var(--ink);
-  font-size: 12px;
+  font-size: var(--fs-nav);
   caret-color: var(--cy);
 }
 
@@ -41,7 +44,7 @@
 }
 
 .message {
-  font-size: 11px;
+  font-size: var(--fs-nav);
   white-space: nowrap;
   color: var(--cy-faint);
 }

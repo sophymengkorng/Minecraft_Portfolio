@@ -7,15 +7,17 @@ import styles from "./Skills.module.css";
 
 export function Skills() {
   return (
-    <Section id={SECTION_IDS.skills}>
+    <Section id={SECTION_IDS.skills} fill>
       <Kicker gap="wide">$ ls ./skills</Kicker>
       <div className={styles.grid}>
         {SKILL_GROUPS.map((group) => (
-          <div key={group.heading}>
+          <div key={group.heading} className={styles.group}>
             <h2 className={styles.heading}>{group.heading}</h2>
             <div className={styles.pills}>
               {group.items.map((item) => (
-                <Pill key={item}>{item}</Pill>
+                <Pill key={item} size="large">
+                  {item}
+                </Pill>
               ))}
             </div>
           </div>

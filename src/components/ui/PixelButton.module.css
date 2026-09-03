@@ -1,7 +1,7 @@
 .button {
   display: inline-block;
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: var(--fs-ui);
   border: 3px solid var(--line);
   box-shadow: 4px 4px 0 #000;
   white-space: nowrap;
@@ -28,11 +28,11 @@
 
 /* --- size --- */
 .hero {
-  padding: 13px 18px;
+  padding: 18px 26px;
 }
 
 .contact {
-  padding: 13px 16px;
+  padding: 17px 22px;
 }
 
 /* --- press-down --- */
