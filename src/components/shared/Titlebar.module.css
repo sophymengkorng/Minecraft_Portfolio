@@ -2,19 +2,22 @@
   position: sticky;
   top: 0;
   z-index: 7;
-  padding: 9px 0;
+  height: var(--titlebar-height);
+  display: flex;
+  align-items: center;
   border-bottom: 3px solid var(--line);
+  box-sizing: border-box;
   background: var(--panel);
 }
 
 .lights {
   display: flex;
-  gap: 6px;
+  gap: 7px;
 }
 
 .light {
-  width: 11px;
-  height: 11px;
+  width: 14px;
+  height: 14px;
 }
 
 .light:nth-child(1) {
@@ -31,15 +34,15 @@
 
 .path {
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: var(--fs-nav);
   color: var(--cy-dim);
 }
 
 .nav {
   margin-left: auto;
   display: flex;
-  gap: 14px;
-  font-size: 10px;
+  gap: 26px;
+  font-size: var(--fs-nav);
 }
 
 .nav a {
@@ -50,12 +53,29 @@
   color: var(--mg);
 }
 
-@media (max-width: 480px) {
+@media (max-width: 560px) {
   .path {
     display: none;
   }
 
   .nav {
-    gap: 10px;
+    gap: 14px;
+  }
+}
+
+/* At 320px the four nav labels plus the lights exceed the rail in Silkscreen,
+   which is far wider than a normal mono face. Shrink both to fit. */
+@media (max-width: 400px) {
+  .lights {
+    gap: 5px;
+  }
+
+  .light {
+    width: 10px;
+    height: 10px;
+  }
+
+  .nav {
+    gap: 7px;
   }
 }

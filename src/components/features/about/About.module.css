@@ -1,22 +1,37 @@
 .grid {
+  flex: 1;
   display: grid;
-  grid-template-columns: 1fr 240px;
-  gap: 32px;
-  align-items: start;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 32%);
+  gap: 56px;
+  align-items: center;
+  min-height: 0;
 }
 
+.lead {
+  display: flex;
+  align-items: center;
+}
+
+/* Body copy, in the prototype's treatment: 1.9 line-height on a 58ch measure.
+   Only the size is scaled up from the authored 14.5px. */
 .bio {
-  font-size: 14.5px;
+  font-size: var(--fs-about);
   line-height: 1.9;
   color: var(--body);
+  max-width: 58ch;
   margin: 0;
   text-wrap: pretty;
 }
 
+/* Key/value rows as authored in the prototype — dashed rules, no panel — just
+   scaled up and spread down the band. */
 .meta {
-  display: grid;
-  gap: 9px;
-  font-size: 12px;
+  align-self: stretch;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  font-size: var(--fs-meta);
 }
 
 .row {
@@ -24,12 +39,13 @@
   justify-content: space-between;
   gap: 12px;
   border-bottom: 1px dashed var(--line);
-  padding-bottom: 7px;
+  padding-bottom: 18px;
 }
 
 /* The last row carries no rule. */
 .row:last-child {
   border-bottom: 0;
+  padding-bottom: 0;
 }
 
 .row dt,
@@ -45,9 +61,24 @@
   color: var(--cy);
 }
 
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .grid {
+    flex: 0 0 auto;
     grid-template-columns: 1fr;
-    gap: 26px;
+    gap: 30px;
+  }
+
+  .bio {
+    max-width: none;
+  }
+
+  .meta {
+    align-self: auto;
+    justify-content: flex-start;
+    gap: 18px;
+  }
+
+  .row {
+    padding-bottom: 12px;
   }
 }

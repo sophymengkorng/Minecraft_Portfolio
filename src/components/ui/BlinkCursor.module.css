@@ -13,9 +13,10 @@
   height: 15px;
 }
 
+/* Sized in em so the block tracks the fluid headline: 14/30 and 23/30. */
 .headline {
-  width: 14px;
-  height: 23px;
-  vertical-align: -3px;
-  margin-left: 9px;
+  width: 0.47em;
+  height: 0.77em;
+  vertical-align: -0.1em;
+  margin-left: 0.3em;
 }

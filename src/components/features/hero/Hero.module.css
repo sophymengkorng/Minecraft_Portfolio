@@ -1,5 +1,9 @@
 .hero {
   padding: 52px 0 40px;
+  min-height: var(--section-min-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   border-bottom: 3px solid var(--line);
   background: radial-gradient(
     110% 80% at 20% 0%,
@@ -10,10 +14,10 @@
 
 .name {
   font-family: var(--font-display);
-  font-size: 52px;
+  font-size: var(--fs-hero);
   line-height: 1.05;
   margin: 0 0 14px;
-  text-shadow: 3px 3px 0 var(--shadow-mg);
+  text-shadow: 0.058em 0.058em 0 var(--shadow-mg);
 }
 
 .roleRow {
@@ -26,20 +30,20 @@
 
 .role {
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: var(--fs-role);
   color: var(--cy);
   letter-spacing: 0.08em;
 }
 
 .alias {
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: var(--fs-alias);
   color: var(--mg);
   letter-spacing: 0.06em;
 }
 
 .pitch {
-  font-size: 14.5px;
+  font-size: var(--fs-pitch);
   line-height: 1.85;
   color: var(--body);
   max-width: 58ch;
@@ -53,12 +57,9 @@
   gap: 12px;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .hero {
     padding: 36px 0 32px;
   }
 
-  .name {
-    font-size: 34px;
-  }
 }

@@ -51,7 +51,13 @@ export default function RootLayout({
       lang="en"
       className={`${silkscreen.variable} ${jetbrainsMono.variable}`}
     >
-      <body>{children}</body>
+      {/*
+        Browser extensions (password managers, Grammarly, dark-mode tools) stamp
+        attributes onto <body> before React hydrates, which reads as a mismatch.
+        This suppresses the warning for this element's own attributes and text
+        only — one level deep — so real mismatches inside the tree still surface.
+      */}
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

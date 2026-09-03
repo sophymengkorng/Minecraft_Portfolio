@@ -16,19 +16,19 @@
 
 .index {
   font-family: var(--font-display);
-  font-size: 20px;
+  font-size: var(--fs-index);
   color: var(--cy-faint);
 }
 
 .title {
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: var(--fs-title);
   margin: 0 0 9px;
   font-weight: 400;
 }
 
 .description {
-  font-size: 13.5px;
+  font-size: var(--fs-card);
   line-height: 1.8;
   color: var(--card-copy);
   margin: 0 0 12px;
@@ -43,7 +43,7 @@
 
 .open {
   font-family: var(--font-display);
-  font-size: 9px;
+  font-size: var(--fs-ui-sm);
   border: 3px solid var(--line);
   padding: 9px 11px;
   white-space: nowrap;
@@ -56,16 +56,13 @@
   color: var(--mg);
 }
 
-/* Below 760px the index goes inline with the title and OPEN drops underneath. */
-@media (max-width: 760px) {
+/* Below 900px (covers 768-834px tablets) the index goes inline and OPEN drops underneath. */
+@media (max-width: 900px) {
   .card {
     grid-template-columns: 1fr;
     gap: 12px;
   }
 
-  .index {
-    font-size: 16px;
-  }
 
   .open {
     justify-self: start;

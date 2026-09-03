@@ -1,5 +1,5 @@
 .kicker {
-  font-size: 12px;
+  font-size: var(--fs-kicker);
   color: var(--cy-faint);
   margin: 0 0 20px;
 }

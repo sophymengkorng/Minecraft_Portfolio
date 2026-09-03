@@ -6,17 +6,17 @@ import styles from "./About.module.css";
 
 export function About() {
   return (
-    <Section id={SECTION_IDS.about}>
+    <Section id={SECTION_IDS.about} fill>
       <Kicker>$ cat about.md</Kicker>
       <div className={styles.grid}>
-        <p className={styles.bio}>{IDENTITY.bio}</p>
+        <div className={styles.lead}>
+          <p className={styles.bio}>{IDENTITY.bio}</p>
+        </div>
         <dl className={styles.meta}>
           {ABOUT_META.map((row) => (
             <div key={row.label} className={styles.row}>
               <dt className={styles.label}>{row.label}</dt>
-              <dd className={row.accent ? styles.accent : undefined}>
-                {row.value}
-              </dd>
+              <dd className={row.accent ? styles.accent : undefined}>{row.value}</dd>
             </div>
           ))}
         </dl>

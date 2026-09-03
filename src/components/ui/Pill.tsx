@@ -1,16 +1,9 @@
 import styles from "./Pill.module.css";
 
-/** `size="small"` is the denser variant used inside project cards. */
-export function Pill({
-  children,
-  size = "default",
-}: {
-  children: React.ReactNode;
-  size?: "default" | "small";
-}) {
-  return (
-    <span className={`${styles.pill} ${size === "small" ? styles.small : ""}`}>
-      {children}
-    </span>
-  );
+type PillSize = "default" | "small" | "large";
+
+/** `small` is the dense project-card variant; `large` fills the skills panels. */
+export function Pill({ children, size = "default" }: { children: React.ReactNode; size?: PillSize }) {
+  const variant = size === "small" ? styles.small : size === "large" ? styles.large : "";
+  return <span className={`${styles.pill} ${variant}`}>{children}</span>;
 }

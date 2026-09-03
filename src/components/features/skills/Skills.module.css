@@ -1,24 +1,42 @@
 .grid {
+  flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 26px;
+  gap: 40px;
+  /* The two rows spread down the full-height band instead of clustering. */
+  align-content: space-evenly;
+  min-height: 0;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .heading {
   font-family: var(--font-display);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  margin-bottom: 11px;
+  font-size: var(--fs-group);
+  letter-spacing: 0.08em;
+  margin: 0;
 }
 
 .pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
+  align-content: flex-start;
+  gap: 12px;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .grid {
+    flex: 0 0 auto;
     grid-template-columns: 1fr;
+    gap: 26px;
+    align-content: center;
+  }
+
+  .pills {
+    gap: 8px;
   }
 }
