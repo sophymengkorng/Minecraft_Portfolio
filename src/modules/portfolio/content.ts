@@ -54,6 +54,13 @@ export const PROJECTS: readonly Project[] = [
     // Packagist rather than the repo: this one is consumed with `composer require`.
     href: "https://packagist.org/packages/cachewraith/laravel-template-structure",
   },
+  {
+    index: "05",
+    name: "DBML Previewer",
+    description: "Live DBML diagram editor and previewer — write DBML, see the ER diagram instantly.",
+    stack: ["Next.js", "React", "React Flow", "DBML", "Tailwind CSS"],
+    href: "https://dbml.hushstackcambodia.site/",
+  },
 ];
 
 export const CONTACT_LINKS: readonly ContactLink[] = [
