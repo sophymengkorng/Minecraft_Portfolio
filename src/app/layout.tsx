@@ -1,19 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import { JetBrains_Mono, Silkscreen } from "next/font/google";
+import { Geist, Geist_Mono, Pixelify_Sans } from "next/font/google";
 import { siteConfig } from "@/config/site";
+import { THEME_BOOT_SCRIPT } from "@/modules/theme/theme";
 import "@/styles/globals.css";
 
-const silkscreen = Silkscreen({
+const geist = Geist({
   subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-silkscreen",
+  variable: "--font-geist",
   display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const geistMono = Geist_Mono({
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  variable: "--font-jetbrains-mono",
+  variable: "--font-geist-mono",
+  display: "swap",
+});
+
+/** Headings, labels and buttons — the Minecraft half of the type. */
+const pixelify = Pixelify_Sans({
+  subsets: ["latin"],
+  variable: "--font-pixelify",
   display: "swap",
 });
 
@@ -37,8 +43,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#06090d",
-  colorScheme: "dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f3efe3" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f1115" },
+  ],
+  colorScheme: "light dark",
 };
 
 export default function RootLayout({
@@ -47,10 +56,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
+    // `data-theme` is written by the boot script before React hydrates, so the
+    // attribute legitimately differs from the server's HTML.
     <html
       lang="en"
-      className={`${silkscreen.variable} ${jetbrainsMono.variable}`}
+      className={`${geist.variable} ${geistMono.variable} ${pixelify.variable}`}
+      suppressHydrationWarning
     >
+      <head>
+        {/* Runs before the body paints: sets day or night with no flash. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
+      </head>
       {/*
         Browser extensions (password managers, Grammarly, dark-mode tools) stamp
         attributes onto <body> before React hydrates, which reads as a mismatch.

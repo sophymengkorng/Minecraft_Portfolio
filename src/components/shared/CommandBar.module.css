@@ -1,60 +1,102 @@
+/* Minecraft chat: bottom-left, translucent black, white text. Always dark, in
+   both themes, the way the game's chat is. No backdrop blur — a blurred fixed
+   layer re-samples the page on every scrolled frame. */
 .bar {
-  position: sticky;
-  bottom: 0;
-  z-index: 8;
+  position: fixed;
+  left: var(--gutter);
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 50;
+  width: min(460px, calc(100% - 2 * var(--gutter)));
   height: var(--commandbar-height);
   display: flex;
   align-items: center;
-  border-top: 3px solid var(--line);
-  box-sizing: border-box;
-  background: var(--panel);
+  gap: 10px;
+  padding: 0 8px 0 14px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
+  animation: rise 0.8s var(--ease-out) 1.2s both;
 }
 
-/* The command bar's own row is tighter than the shared 10px chrome gap. */
-.row {
-  gap: 8px;
+.bar:focus-within {
+  box-shadow: 0 0 0 2px var(--accent);
 }
 
 .prompt {
-  font-size: var(--fs-nav);
-  white-space: nowrap;
-}
-
-.cd {
-  color: var(--mg);
-}
-
-.chevron {
-  color: var(--cy-faint);
+  font-family: var(--font-pixel);
+  font-size: 1.1rem;
+  color: var(--accent);
 }
 
 .input {
   flex: 1;
   min-width: 0;
+  height: 100%;
   background: transparent;
   border: 0;
   outline: 0;
-  color: var(--ink);
-  font-size: var(--fs-nav);
-  caret-color: var(--cy);
+  color: #ffffff;
+  caret-color: var(--accent);
 }
 
 .input::placeholder {
-  color: var(--cy-faint);
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* The chat log: the last reply sits above the bar and fades like game chat. */
+.log {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 6px);
+  pointer-events: none;
 }
 
 .message {
-  font-size: var(--fs-nav);
+  display: block;
+  padding: 4px 12px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  font-family: var(--font-pixel);
+  font-size: var(--fs-pixel);
   white-space: nowrap;
-  color: var(--cy-faint);
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+  animation: chat-fade 4.5s linear both;
 }
 
 .error {
-  color: var(--mg);
+  color: #ff6b5b;
 }
 
-@media (max-width: 560px) {
-  .message {
-    display: none;
+.kbd {
+  display: grid;
+  place-items: center;
+  min-width: 26px;
+  height: 26px;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-pixel);
+  font-size: 0.8rem;
+}
+
+.bar:focus-within .kbd {
+  display: none;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+@keyframes chat-fade {
+  0%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }

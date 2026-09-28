@@ -15,4 +15,4 @@ export const SECTION_IDS = {
 export const SECTION_ORDER = ["about", "skills", "projects", "contact"] as const;
 
 /** Aliases accepted by the command bar for "scroll back to the top". */
-export const TOP_ALIASES = ["top", "~", "home"] as const;
+export const TOP_ALIASES = ["top", "~", "home", "spawn"] as const;

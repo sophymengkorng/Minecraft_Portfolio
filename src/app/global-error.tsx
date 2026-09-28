@@ -23,7 +23,7 @@ export default function GlobalError({
             ) : null}
             <div className={styles.actions}>
               <button className={styles.button} type="button" onClick={reset}>
-                REBOOT
+                Reboot
               </button>
             </div>
           </div>

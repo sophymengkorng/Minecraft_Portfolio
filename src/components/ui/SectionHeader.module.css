@@ -1,0 +1,41 @@
+.header {
+  display: grid;
+  gap: 18px;
+  margin-bottom: clamp(40px, 5vw, 72px);
+}
+
+/* `[01] $ cat about.md ────` — a terminal line that runs out to the rail. */
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+}
+
+.meta::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, var(--line-strong) 0 8px, transparent 8px 14px);
+}
+
+.index {
+  padding: 2px 8px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-pixel);
+}
+
+.kicker {
+  color: var(--ink-mute);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  text-shadow: 0.05em 0.05em 0 var(--line);
+}

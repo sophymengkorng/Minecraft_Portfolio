@@ -1,33 +1,4 @@
 .container {
-  width: var(--content-width);
-  margin: 0 auto;
-  /* The chrome bars are flex parents; keep the rail from being shrunk. */
-  flex: 0 0 auto;
-}
-
-/* Chrome rows (titlebar, command bar) share the same rails as the sections. */
-.row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* Lets a section's content stretch over the full section height instead of
-   clustering in the middle of it. */
-.fill {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-@media (max-width: 900px) {
-  .container {
-    padding: 0 20px;
-  }
-}
-
-@media (max-width: 400px) {
-  .container {
-    padding: 0 14px;
-  }
+  width: var(--container);
+  margin-inline: auto;
 }

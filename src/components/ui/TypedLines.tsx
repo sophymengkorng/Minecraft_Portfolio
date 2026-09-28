@@ -60,7 +60,7 @@ export function TypedLines({ lines }: { lines: readonly string[] }) {
             <span className={styles.ghost}>{line}</span>
             <span className={styles.live}>
               {typedPrefix(lines, index, state.typed)}
-              {cursorLine === index && <BlinkCursor variant="caret" color="magenta" />}
+              {cursorLine === index && <BlinkCursor />}
             </span>
           </span>
         ))}

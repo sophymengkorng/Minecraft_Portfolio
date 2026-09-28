@@ -1,0 +1,51 @@
+.toggle {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 2px solid var(--edge);
+  background: var(--stone-btn);
+  color: var(--splash);
+  cursor: pointer;
+  box-shadow:
+    inset 2px 2px 0 rgba(255, 255, 255, 0.28),
+    inset -2px -3px 0 rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s var(--ease-snap);
+}
+
+.toggle:hover {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.toggle:active {
+  transform: translateY(2px);
+}
+
+.toggle svg {
+  grid-area: 1 / 1;
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  transition:
+    transform 0.5s var(--ease-snap),
+    opacity 0.3s;
+}
+
+/* Day shows the moon (what you would switch to), night shows the sun. */
+.sun {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.4);
+}
+
+:root[data-theme="dark"] .sun {
+  opacity: 1;
+  transform: none;
+}
+
+:root[data-theme="dark"] .moon {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.4);
+}

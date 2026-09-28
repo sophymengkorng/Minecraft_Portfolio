@@ -1,44 +1,19 @@
+/* The chat caret: an underscore block that blinks, sized in em so it tracks
+   whatever type it sits in. */
 .cursor {
   display: inline-block;
-  background: var(--cy);
-  animation: blink 1.1s steps(1) infinite;
-}
-
-.magenta {
-  background: var(--mg);
-}
-
-.prompt {
-  width: 8px;
-  height: 15px;
-}
-
-/* Sized in em so the block tracks the fluid headline: 14/30 and 23/30. */
-.headline,
-.caret {
-  width: 0.47em;
-  height: 0.77em;
-  vertical-align: -0.1em;
-}
-
-.headline {
-  margin-left: 0.3em;
-}
-
-/* A typewriter's cursor is the next cell, not a word apart from the last one. */
-.caret {
+  width: 0.55em;
+  height: 0.14em;
   margin-left: 0.08em;
+  vertical-align: -0.08em;
+  background: var(--accent);
+  animation: blink 1s steps(1) infinite;
 }
 
 /* Local, not in globals.css: CSS Modules scope `animation-name`, so a module
    that names a global keyframe resolves to a scoped name that does not exist. */
 @keyframes blink {
-  0%,
-  49% {
-    opacity: 1;
-  }
-  50%,
-  100% {
+  50% {
     opacity: 0;
   }
 }

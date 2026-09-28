@@ -1,16 +1,4 @@
 .section {
-  padding: 40px 0;
-  min-height: var(--section-min-height);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border-bottom: 3px solid var(--line);
-  /* Clears the sticky titlebar when an anchor or the command bar jumps here. */
-  scroll-margin-top: calc(var(--titlebar-height) + 8px);
-}
-
-@media (max-width: 900px) {
-  .section {
-    padding: 32px 0;
-  }
+  position: relative;
+  padding-block: var(--section-pad);
 }

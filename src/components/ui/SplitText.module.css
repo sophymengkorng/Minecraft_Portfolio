@@ -1,0 +1,32 @@
+.lines {
+  display: block;
+}
+
+/* The mask each letter drops into. The padding keeps descenders and the block
+   shadow from being clipped; the negative margin gives the space back. */
+.line {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.08em 0.2em;
+  margin-block: -0.08em -0.2em;
+  padding-inline-end: 0.08em;
+}
+
+/* No `will-change` here: on every letter of every heading it would pin
+   hundreds of compositor layers for the life of the page. The animations
+   promote each letter only while they run. */
+.char {
+  display: inline-block;
+  white-space: pre;
+}
+
+/* Lines as words: each keeps its own mask but they share a row and wrap. */
+.inline .line {
+  display: inline-block;
+  vertical-align: top;
+  margin-inline-end: 0.3em;
+}
+
+.accent {
+  color: var(--accent);
+}

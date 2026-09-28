@@ -16,15 +16,15 @@ export default function Error({
   return (
     <div className={styles.wrap}>
       <div className={styles.panel}>
-        <h1 className={styles.code}>500</h1>
-        <p className={styles.line}>zsh: segmentation fault</p>
+        <h1 className={styles.code}>You died!</h1>
+        <p className={styles.line}>Server fell out of the world (500).</p>
         <p className={styles.line}>something broke on this screen.</p>
         {error.digest ? (
           <p className={styles.digest}>ref: {error.digest}</p>
         ) : null}
         <div className={styles.actions}>
           <button className={styles.button} type="button" onClick={reset}>
-            RETRY
+            Respawn
           </button>
         </div>
       </div>

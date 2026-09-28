@@ -1,38 +1,158 @@
-.contact {
-  padding: 48px 0 56px;
-  min-height: var(--section-min-height);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  scroll-margin-top: calc(var(--titlebar-height) + 8px);
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(40px, 5vw, 96px);
+  align-items: start;
 }
 
-.headline {
+.caption {
+  margin-bottom: 14px;
+  font-family: var(--font-pixel);
+  font-size: var(--fs-pixel);
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.email {
+  display: inline-block;
+  position: relative;
+  padding-bottom: 0.1em;
   font-family: var(--font-display);
-  font-size: var(--fs-headline);
-  line-height: 1.45;
-  margin: 0 0 28px;
-  font-weight: 400;
+  font-size: var(--fs-email);
+  font-weight: 700;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+  transition: color 0.2s;
 }
 
-.links {
+/* A chunky block underline that fills in from the left on hover. */
+.email::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 0.09em;
+  min-height: 4px;
+  background: var(--accent);
+  transform: scaleX(0.15);
+  transform-origin: left;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.email:hover {
+  color: var(--accent-ink);
+}
+
+.email:hover::after,
+.email:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* SplitText measures lines on a block box. */
+.email > span {
+  display: block;
+}
+
+/* The server list sits in a sunken GUI panel. */
+.servers {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 8px;
+  list-style: none;
+  border: 2px solid var(--edge);
+  background: #121317;
+  box-shadow: 6px 6px 0 var(--shadow);
+}
+
+.server {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  border: 2px solid transparent;
+  color: #ffffff;
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
+}
+
+/* Selected server: the game's white outline. */
+a.server:hover,
+a.server:focus-visible {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  outline: none;
+}
+
+.server > svg {
+  color: rgba(255, 255, 255, 0.5);
+  transition: transform 0.3s var(--ease-snap);
+}
+
+a.server:hover > svg {
+  color: #ffffff;
+  transform: translate(2px, -2px);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  background: var(--stone-btn);
+  font-family: var(--font-pixel);
+  font-size: 1.2rem;
+  font-weight: 700;
+  box-shadow:
+    inset 3px 3px 0 rgba(255, 255, 255, 0.25),
+    inset -3px -3px 0 rgba(0, 0, 0, 0.35);
+}
+
+a.server:hover .icon {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.text {
+  display: grid;
+  min-width: 0;
+}
+
+.label {
+  font-family: var(--font-pixel);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.handle {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  color: #a8a8a8;
+  overflow-wrap: anywhere;
+}
+
+.ping {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
 }
 
-.chip {
-  font-family: var(--font-display);
-  font-size: var(--fs-ui);
-  padding: 17px 22px;
-  border: 3px solid var(--line);
-  color: var(--cy-faint);
-  white-space: nowrap;
+.ping span {
+  width: 3px;
+  background: #3a3a3a;
+}
+
+.live span {
+  background: #55ff55;
 }
 
 @media (max-width: 900px) {
-  .contact {
-    padding: 36px 0 44px;
+  .layout {
+    grid-template-columns: 1fr;
   }
-
 }
