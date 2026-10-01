@@ -1,0 +1,13 @@
+/* Static, under the content, no blend mode: it is rasterized once and never
+   repainted on scroll (the old grain overlay sat above everything with
+   `mix-blend-mode`, which forced a full-screen blend every frame). */
+.grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+}

@@ -4,72 +4,92 @@
 *::before,
 *::after {
   box-sizing: border-box;
-  border-radius: var(--radius);
 }
 
+/* Native smooth scrolling is the fallback. Once Lenis mounts it adds `.lenis`
+   to <html> and owns the easing, so the two must not stack. */
 html {
   scroll-behavior: smooth;
-  background: var(--backdrop);
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+}
+
+/* The handful of rules Lenis ships in `lenis/dist/lenis.css`. */
+html.lenis,
+html.lenis body {
+  height: auto;
+  scroll-behavior: auto;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
 
 body {
   margin: 0;
-  padding: 0;
-  background: var(--backdrop);
+  background: var(--bg);
   color: var(--ink);
   font-family: var(--font-body);
-  /* Antialiasing softens the bitmap font and kills the effect. */
-  -webkit-font-smoothing: none;
+  font-size: var(--fs-body);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Full-bleed bands use 100vw, which includes the scrollbar. */
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
 }
 
 a {
-  color: var(--cy);
+  color: inherit;
   text-decoration: none;
 }
 
-a:hover {
-  color: var(--mg);
-}
-
+button,
 input {
-  font-family: inherit;
+  font: inherit;
+  color: inherit;
 }
 
 ::selection {
-  background: var(--mg);
-  color: var(--bg);
+  background: var(--accent);
+  color: var(--accent-contrast);
 }
 
 :focus-visible {
-  outline: 2px solid var(--cy);
-  outline-offset: 2px;
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
 }
 
-@keyframes flick {
-  0%,
-  100% {
-    opacity: 0.03;
-  }
-  50% {
-    opacity: 0.05;
-  }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
-@media (max-width: 900px) {
-  :root {
-    --content-width: 100%;
-    --titlebar-height: 46px;
-    --commandbar-height: 46px;
-  }
+/* The theme switch is a view transition: the new theme is revealed through a
+   growing circle from the toggle (see `modules/theme/dom.ts`). The default
+   cross-fade is turned off so only that clip animates. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
-@media (max-width: 400px) {
-  :root {
-    --fs-nav: 10px;
-  }
-}
-
-/* Freeze the flicker and the blink; the static scanlines stay. */
+/* Every CSS animation and transition stops. The GSAP scroll and text effects,
+   Lenis and the WebGL loop check the same query and never start. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -81,4 +101,10 @@ input {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* Content stacks above the fixed pixel-grid layer. */
+.page {
+  position: relative;
+  z-index: 1;
 }

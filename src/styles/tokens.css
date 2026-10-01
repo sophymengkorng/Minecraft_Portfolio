@@ -1,74 +1,128 @@
 /*
- * Design tokens, transcribed verbatim from the handoff prototype.
- * oklch values are kept as authored — the wide-gamut cyan/magenta is the look.
+ * Design tokens — Developer × Minecraft. Two palettes, day and night, switched
+ * by `data-theme` on <html> (set before first paint by the boot script in the
+ * layout). Hard edges everywhere: no radii, no blur, bevels and offset shadows
+ * instead of soft ones.
  */
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  /* Surfaces — sandstone paper under a blue sky */
+  --bg: #f3efe3;
+  --bg-raised: #e9e3d2;
+  --panel: #fbf8ef;
+  --line: #d9d1bc;
+  --line-strong: #a79e86;
+
+  /* Ink */
+  --ink: #1d1b16;
+  --ink-soft: #413c32;
+  --ink-mute: #6b6453;
+  --ink-faint: #a0987f;
+
+  /* Blocks */
+  --accent: #4a9a22;
+  --accent-ink: #2f6d12;
+  --accent-contrast: #0f2206;
+  --diamond: #16918b;
+  --gold: #b27800;
+  --redstone: #c02d20;
+  --splash: #e8a800;
+  --splash-shadow: #5a3d00;
+
+  /* Minecraft GUI */
+  --gui: #c6c6c6;
+  --gui-ink: #3f3f3f;
+  --gui-hi: #ffffff;
+  --gui-lo: #555555;
+  --slot: #6f6f6f;
+  --stone-btn: #7a7a7a;
+  --edge: #1d1b16;
+  --shadow: #1d1b16;
+  --text-shadow: color-mix(in srgb, var(--ink) 16%, transparent);
+
+  /* Sky behind the hero */
+  --sky-top: #8fc6ff;
+  --sky-mid: #cfe7f8;
+
+  /* The pixel grid behind the page */
+  --grid: color-mix(in srgb, var(--ink) 5%, transparent);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0f1115;
+  --bg-raised: #161920;
+  --panel: #171a21;
+  --line: #262b34;
+  --line-strong: #3d4450;
+
+  --ink: #ece8dd;
+  --ink-soft: #c3beb0;
+  --ink-mute: #8d8878;
+  --ink-faint: #5f5b51;
+
+  --accent: #6fcf3a;
+  --accent-ink: #8ade58;
+  --accent-contrast: #0b1a04;
+  --diamond: #4ee6dd;
+  --gold: #ffd43b;
+  --redstone: #ff5a4a;
+  --splash: #ffff55;
+  --splash-shadow: #3f3f15;
+
+  --gui: #23262e;
+  --gui-ink: #e0ddd3;
+  --gui-hi: #3c414c;
+  --gui-lo: #0a0b0e;
+  --slot: #13151a;
+  --stone-btn: #3a3e47;
+  --edge: #000000;
+  --shadow: #000000;
+  --text-shadow: rgba(0, 0, 0, 0.6);
+
+  --sky-top: #060a1f;
+  --sky-mid: #0d1430;
+
+  --grid: rgba(255, 255, 255, 0.025);
+}
+
 :root {
-  /* Surfaces */
-  --backdrop: #050709;
-  --bg: #06090d;
-  --bg2: #0a0f14;
-  --panel: #0d131a;
+  /* Geometry */
+  --gutter: clamp(20px, 4.5vw, 72px);
+  --content-max: 1480px;
+  /* Every band's content sits on this one measure, so the nav, the sections and
+     the footer share left and right rails. */
+  --container: min(100% - 2 * var(--gutter), var(--content-max));
+  --section-pad: clamp(64px, 9vh, 112px);
+  --nav-height: 64px;
+  --commandbar-height: 44px;
+  --px: 4px; /* one "pixel" of the chunky UI */
 
-  /* Phosphor palette */
-  --cy: oklch(0.86 0.12 200);
-  --cy-dim: oklch(0.66 0.1 200);
-  --cy-faint: oklch(0.46 0.06 205);
-  --mg: oklch(0.74 0.19 330);
-  --ink: oklch(0.96 0.01 210);
-  --line: oklch(0.36 0.04 210);
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-snap: cubic-bezier(0.2, 0.9, 0.3, 1.25);
 
-  /* Copy */
-  --body: oklch(0.8 0.02 210);
-  --card-copy: oklch(0.76 0.02 210);
-  --shadow-mg: oklch(0.4 0.09 330);
+  /* Fluid type scale */
+  --fs-display: clamp(2.6rem, 6.4vw, 6.75rem);
+  --fs-h2: clamp(2rem, 3.9vw, 3.75rem);
+  --fs-statement: clamp(1.3rem, 1.8vw, 2rem);
+  --fs-project: clamp(1.2rem, 1.5vw, 1.55rem);
+  --fs-email: clamp(1.25rem, 2.8vw, 2.75rem);
+  --fs-lead: clamp(0.98rem, 0.3vw + 0.9rem, 1.15rem);
+  --fs-role: clamp(1rem, 0.6vw + 0.8rem, 1.4rem);
+  --fs-body: clamp(0.92rem, 0.2vw + 0.86rem, 1.02rem);
+  --fs-nav: 0.72rem;
+  --fs-mono: clamp(0.7rem, 0.15vw + 0.68rem, 0.82rem);
+  --fs-pixel: clamp(0.78rem, 0.15vw + 0.72rem, 0.9rem);
 
-  /* Geometry — border radius is 0 everywhere, by design. */
-  --radius: 0;
-  /* The frame is full-bleed; the content inside it sits on an 80% measure. */
-  --frame-width: 100%;
-  --content-width: 80%;
-  /* The chrome bars are set to these heights explicitly (rather than measured
-     from padding + a fluid font), so the section height and the anchor offsets
-     derived from them are exact at every viewport width. */
-  --titlebar-height: 56px;
-  --commandbar-height: 56px;
-  /* Each section fills the screen between the two sticky chrome bars. */
-  --section-min-height: calc(100vh - var(--titlebar-height) - var(--commandbar-height));
-  --section-min-height: calc(100svh - var(--titlebar-height) - var(--commandbar-height));
-
-  /* Fluid type scale.
-     Every ramp is built as `slope*vw + basepx` so it lands exactly on the
-     handoff's authored size at ~1440px (a laptop), holds a readable floor on
-     phones, and grows ~14% on large desktop / 5K displays instead of shrinking
-     into the corner. Authored size is noted after each token. */
-  --fs-hero: clamp(38px, 4.4vw, 92px); /* ~63 at 1440 */
-  --fs-kicker: clamp(12px, 0.6vw + 7.4px, 22px); /* ~16 at 1440 */
-  --fs-role: clamp(13px, 0.76vw + 6px, 26px); /* ~17 at 1440 */
-  --fs-alias: clamp(12px, 0.66vw + 5.5px, 23px); /* ~15 at 1440 */
-  --fs-pitch: clamp(15px, 0.97vw + 8px, 30px); /* ~22 at 1440 */
-  --fs-headline: clamp(19px, 2.1vw, 34px); /* 30 */
-  --fs-index: clamp(16px, 0.583vw + 11.6px, 22.8px); /* 20 */
-  /* Larger ramps for the two sections that carry little content, so they read
-     at full-screen height. Same typefaces, bigger sizes. */
-  --fs-group: clamp(12px, 0.7vw + 6px, 22px); /* ~16 at 1440 */
-  --fs-pill-lg: clamp(13px, 0.83vw + 6px, 24px); /* ~18 at 1440 */
-  --fs-meta: clamp(14px, 0.83vw + 8px, 26px); /* ~20 at 1440 */
-  /* About's bio, in the prototype's paragraph treatment - only bigger. */
-  --fs-about: clamp(17px, 1.32vw + 7px, 38px); /* ~26 at 1440 */
-  /* Titlebar and command bar share one chrome size. */
-  --fs-nav: clamp(11px, 0.49vw + 7px, 19px); /* ~14 at 1440 */
-  --fs-body: clamp(13px, 0.423vw + 8.41px, 16.5px); /* 14.5 */
-  --fs-card: clamp(12.5px, 0.394vw + 7.83px, 15.4px); /* 13.5 */
-  --fs-title: clamp(12px, 0.379vw + 7.54px, 14.8px); /* 13 */
-  --fs-pill: clamp(11px, 0.335vw + 6.67px, 13.1px); /* 11.5 */
-  --fs-pill-sm: clamp(10px, 0.306vw + 6.09px, 12px); /* 10.5 */
-  --fs-ui: clamp(11px, 0.49vw + 6px, 19px); /* ~13 at 1440 */
-  --fs-ui-sm: clamp(8.5px, 0.263vw + 5.22px, 10.3px); /* 9 */
-
-  /* Type — Silkscreen (the bitmap face) everywhere. JetBrains Mono stays in the
-     stack as a per-glyph fallback: Silkscreen has no glyph for the arrows, block
-     and chevron the design uses (↗ ▮ ›), and the browser falls back for those
-     characters alone rather than for the whole run. */
-  --font-display: var(--font-silkscreen), var(--font-jetbrains-mono), ui-monospace, monospace;
-  --font-body: var(--font-silkscreen), var(--font-jetbrains-mono), ui-monospace, monospace;
+  /* Type */
+  /* Pixel type only where it is big or short (headings, labels, buttons);
+     anything you actually read is a clean sans, code bits are mono. */
+  --font-display: var(--font-pixelify), system-ui, sans-serif;
+  --font-pixel: var(--font-pixelify), system-ui, sans-serif;
+  --font-body: var(--font-geist), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }

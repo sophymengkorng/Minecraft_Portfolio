@@ -1,0 +1,156 @@
+/* Solid, not blurred: a backdrop-filter on a fixed bar re-samples the page on
+   every scrolled frame, and that is most of what "laggy scroll" means. */
+.header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  height: var(--nav-height);
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
+  border-bottom: 2px solid var(--line);
+  animation: drop 0.9s var(--ease-out) 0.1s both;
+}
+
+.bar {
+  width: var(--container);
+  height: 100%;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 28px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: auto;
+  font-family: var(--font-pixel);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* A grass block in two gradients: green cap with a ragged edge over dirt. */
+.block {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--edge);
+  background:
+    linear-gradient(90deg, #5d9b34 0 25%, #4f8a2b 25% 50%, #6aac3c 50% 75%, #5d9b34 75%) top / 100% 30% no-repeat,
+    linear-gradient(90deg, transparent 0 25%, #5d9b34 25% 50%, transparent 50%) 0 30% / 100% 12% no-repeat,
+    linear-gradient(90deg, #7a5536 0 33%, #6b4a2f 33% 66%, #8b6240 66%);
+  transition: transform 0.4s var(--ease-snap);
+}
+
+.brand:hover .block {
+  transform: rotate(-12deg) scale(1.1);
+}
+
+.links {
+  display: flex;
+  gap: clamp(6px, 1.4vw, 20px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 6px 10px;
+  font-family: var(--font-pixel);
+  font-size: 0.95rem;
+  color: var(--ink-mute);
+  text-transform: capitalize;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+
+.link:hover {
+  color: var(--ink);
+  background: var(--bg-raised);
+}
+
+.link[aria-current] {
+  color: var(--accent-contrast);
+  background: var(--accent);
+}
+
+.num {
+  font-size: 0.75em;
+  opacity: 0.7;
+}
+
+/* The XP bar: a segmented dark track along the bottom edge, filled in green
+   with page progress, and the current "level" (section) above its centre. */
+.xp {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 6px;
+  background: #1a1a1a;
+  pointer-events: none;
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(#b5f36a, #80d93a 50%, #4d9a1c);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* Notches over the fill, so it reads as XP rather than a loading bar. */
+.xp::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, transparent 0 calc(5.5% - 2px), #1a1a1a calc(5.5% - 2px) 5.5%);
+}
+
+.level {
+  position: absolute;
+  left: 50%;
+  top: 4px;
+  transform: translateX(-50%);
+  font-family: var(--font-pixel);
+  font-size: 0.95rem;
+  line-height: 1;
+  color: #80ff20;
+  text-shadow:
+    2px 0 0 #000,
+    -2px 0 0 #000,
+    0 2px 0 #000,
+    0 -2px 0 #000;
+}
+
+@keyframes drop {
+  from {
+    transform: translateY(-100%);
+  }
+}
+
+@media (max-width: 720px) {
+  .num {
+    display: none;
+  }
+
+  .link {
+    padding: 6px;
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 520px) {
+  /* The mark alone on phones; the name sits in the hero right below. */
+  .brand {
+    font-size: 0;
+  }
+
+  .links {
+    gap: 0;
+  }
+}

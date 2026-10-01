@@ -1,0 +1,43 @@
+.footer {
+  position: relative;
+  padding-bottom: calc(var(--commandbar-height) + 48px);
+  background: #3b2a1c;
+  color: #e8dcc8;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+}
+
+/* Grass cap with a ragged lower edge, then a band of two-tone dirt pixels. */
+.ground {
+  height: 40px;
+  margin-bottom: 32px;
+  background:
+    repeating-linear-gradient(90deg, #5d9b34 0 16px, #4f8a2b 16px 32px, #6aac3c 32px 40px, #5d9b34 40px 56px) top / 100% 12px no-repeat,
+    repeating-linear-gradient(90deg, #4f8a2b 0 8px, transparent 8px 24px, #5d9b34 24px 32px, transparent 32px 48px) 0 12px / 100% 8px no-repeat,
+    repeating-conic-gradient(#7a5536 0 25%, #6b4a2f 0 50%) 0 0 / 16px 16px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 24px;
+}
+
+.top {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-pixel);
+  transition: color 0.2s;
+}
+
+.top:hover {
+  color: #8ade58;
+}
+
+.disclaimer {
+  margin-top: 20px;
+  font-size: 0.72rem;
+  color: #a8987f;
+}

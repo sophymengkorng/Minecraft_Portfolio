@@ -1,68 +1,72 @@
 .wrap {
   min-height: 100vh;
-  background: var(--backdrop);
   display: grid;
   place-items: center;
   padding: 40px 20px;
+  background: var(--bg);
 }
 
 .panel {
   width: 100%;
   max-width: 560px;
-  border: 3px solid var(--line);
-  background: var(--bg2);
-  box-shadow:
-    0 0 0 3px #000,
-    0 20px 50px rgba(0, 0, 0, 0.7);
-  padding: 32px;
+  text-align: center;
 }
 
 .code {
+  margin: 0 0 20px;
   font-family: var(--font-display);
-  font-size: var(--fs-index);
-  color: var(--mg);
-  margin: 0 0 16px;
-  font-weight: 400;
+  font-size: clamp(3.2rem, 11vw, 6.5rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--redstone);
+  text-shadow: 0.06em 0.06em 0 var(--text-shadow);
 }
 
 .line {
-  font-size: var(--fs-body);
-  line-height: 1.85;
-  color: var(--cy-dim);
-  margin: 0 0 8px;
+  margin: 0 0 6px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  line-height: 1.8;
+  color: var(--ink-soft);
 }
 
 .digest {
-  font-size: var(--fs-pill);
-  color: var(--cy-faint);
-  margin: 0 0 24px;
+  margin: 12px 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  color: var(--ink-faint);
   word-break: break-all;
 }
 
 .actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 12px;
-  margin-top: 24px;
+  margin-top: 32px;
 }
 
 .button {
-  font-family: var(--font-display);
-  font-size: var(--fs-ui);
-  padding: 13px 16px;
-  border: 3px solid var(--line);
-  background: transparent;
-  color: var(--cy);
-  box-shadow: 4px 4px 0 #000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 260px;
+  height: 50px;
+  padding: 0 26px;
+  border: 2px solid var(--edge);
+  background: var(--stone-btn);
+  color: #ffffff;
+  font-family: var(--font-pixel);
+  font-size: 1.05rem;
   cursor: pointer;
-  transition:
-    transform 60ms steps(2),
-    box-shadow 60ms steps(2);
+  box-shadow:
+    inset 3px 3px 0 rgba(255, 255, 255, 0.3),
+    inset -3px -4px 0 rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s;
 }
 
 .button:hover,
 .button:focus-visible {
-  border-color: var(--cy);
-  box-shadow: 1px 1px 0 #000;
-  transform: translate(3px, 3px);
+  background: var(--accent);
+  color: var(--accent-contrast);
 }

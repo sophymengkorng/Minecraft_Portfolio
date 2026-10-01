@@ -1,84 +1,92 @@
 .grid {
-  flex: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(300px, 32%);
-  gap: 56px;
-  align-items: center;
-  min-height: 0;
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr);
+  gap: clamp(40px, 6vw, 112px);
+  align-items: start;
 }
 
-.lead {
+.text {
+  display: grid;
+  gap: clamp(28px, 3vw, 44px);
+}
+
+.statement {
+  max-width: 26ch;
+  font-size: var(--fs-statement);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.pitch {
+  max-width: 52ch;
+  font-size: var(--fs-lead);
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+/* The F3 screen: light text on a dark translucent strip, in both themes, with
+   a GUI-panel frame so it sits on the page like a window. */
+.debug {
+  padding: 18px;
+  border: 2px solid var(--edge);
+  background: #1b1d22;
+  color: #e6e6e6;
+  box-shadow:
+    inset 2px 2px 0 rgba(255, 255, 255, 0.08),
+    6px 6px 0 var(--shadow);
+}
+
+.debugTitle {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  font-family: var(--font-pixel);
+  font-size: var(--fs-pixel);
+  color: #ffffff;
 }
 
-/* Body copy, in the prototype's treatment: 1.9 line-height on a 58ch measure.
-   Only the size is scaled up from the authored 14.5px. */
-.bio {
-  font-size: var(--fs-about);
-  line-height: 1.9;
-  color: var(--body);
-  max-width: 58ch;
-  margin: 0;
-  text-wrap: pretty;
+.key {
+  padding: 2px 6px;
+  background: rgba(255, 255, 255, 0.14);
+  font-family: inherit;
+  font-size: 0.85em;
 }
 
-/* Key/value rows as authored in the prototype — dashed rules, no panel — just
-   scaled up and spread down the band. */
 .meta {
-  align-self: stretch;
+  display: grid;
+  gap: 4px;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  font-size: var(--fs-meta);
 }
 
 .row {
   display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  border-bottom: 1px dashed var(--line);
-  padding-bottom: 18px;
-}
-
-/* The last row carries no rule. */
-.row:last-child {
-  border-bottom: 0;
-  padding-bottom: 0;
-}
-
-.row dt,
-.row dd {
-  margin: 0;
+  gap: 10px;
+  width: fit-content;
+  padding: 3px 8px;
+  background: rgba(255, 255, 255, 0.07);
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
 }
 
 .label {
-  color: var(--cy-faint);
+  color: #a8a8a8;
+}
+
+.value {
+  margin: 0;
+  color: #ffffff;
 }
 
 .accent {
-  color: var(--cy);
+  color: #6fe0ff;
 }
 
 @media (max-width: 900px) {
   .grid {
-    flex: 0 0 auto;
     grid-template-columns: 1fr;
-    gap: 30px;
-  }
-
-  .bio {
-    max-width: none;
-  }
-
-  .meta {
-    align-self: auto;
-    justify-content: flex-start;
-    gap: 18px;
-  }
-
-  .row {
-    padding-bottom: 12px;
   }
 }

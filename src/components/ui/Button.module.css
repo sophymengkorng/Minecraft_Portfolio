@@ -1,0 +1,68 @@
+/* The in-game button: black edge, light bevel top-left, dark bevel
+   bottom-right, and a hard block shadow that it presses down into. Only
+   transform and colours change on hover, so nothing re-lays out. */
+.button {
+  display: inline-flex;
+  align-items: center;
+  height: 46px;
+  padding: 0 22px;
+  border: 2px solid var(--edge);
+  font-family: var(--font-pixel);
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow:
+    inset 3px 3px 0 rgba(255, 255, 255, 0.3),
+    inset -3px -4px 0 rgba(0, 0, 0, 0.3),
+    4px 4px 0 var(--shadow);
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+  transition:
+    background-color 0.2s,
+    translate 0.15s var(--ease-out),
+    box-shadow 0.15s var(--ease-out);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.label svg {
+  font-size: 0.8em;
+  transition: transform 0.3s var(--ease-snap);
+}
+
+.button:hover .label svg {
+  transform: translate(2px, -2px);
+}
+
+/* `translate`, not `transform`: GSAP's magnetic pull owns `transform`. */
+.button:active {
+  translate: 4px 4px;
+  box-shadow:
+    inset 3px 3px 0 rgba(255, 255, 255, 0.3),
+    inset -3px -4px 0 rgba(0, 0, 0, 0.3),
+    0 0 0 var(--shadow);
+}
+
+.solid {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  text-shadow: none;
+}
+
+.solid:hover,
+.solid:focus-visible {
+  background: color-mix(in srgb, var(--accent) 85%, #ffffff);
+}
+
+.outline {
+  background: var(--stone-btn);
+  color: #ffffff;
+}
+
+.outline:hover,
+.outline:focus-visible {
+  background: color-mix(in srgb, var(--stone-btn) 80%, #8fb3ff);
+}

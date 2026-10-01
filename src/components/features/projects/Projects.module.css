@@ -1,4 +1,144 @@
-.list {
+.grid {
   display: grid;
-  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(18px, 2vw, 28px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* An odd last card spans the row rather than leaving a hole. */
+.item:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.item {
+  display: flex;
+}
+
+/* Hover lifts the card off its block shadow — transform only, plus one
+   shadow change on a single element. */
+.card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 18px;
+  width: 100%;
+  padding: clamp(18px, 2vw, 26px);
+  border: 2px solid var(--edge);
+  background: var(--panel);
+  box-shadow: 5px 5px 0 var(--shadow);
+  transition:
+    transform 0.25s var(--ease-out),
+    box-shadow 0.25s var(--ease-out),
+    border-color 0.2s;
+}
+
+.card:hover,
+.card:focus-visible {
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0 var(--accent);
+}
+
+/* The advancement frame: a bevelled square holding the number. */
+.frame {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 2px solid var(--edge);
+  background: var(--stone-btn);
+  color: #ffffff;
+  font-family: var(--font-pixel);
+  font-size: 1.25rem;
+  font-weight: 700;
+  box-shadow:
+    inset 3px 3px 0 rgba(255, 255, 255, 0.3),
+    inset -3px -3px 0 rgba(0, 0, 0, 0.35);
+  transition:
+    background-color 0.2s,
+    transform 0.3s var(--ease-snap);
+}
+
+.card:hover .frame {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  transform: rotate(-8deg);
+}
+
+.body {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.toast {
+  font-family: var(--font-pixel);
+  font-size: var(--fs-pixel);
+  color: var(--gold);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: var(--fs-project);
+  font-weight: 700;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.description {
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.tag {
+  padding: 2px 8px;
+  background: var(--bg-raised);
+  border: 1px solid var(--line-strong);
+  font-family: var(--font-mono);
+  font-size: calc(var(--fs-mono) * 0.95);
+  color: var(--ink-soft);
+}
+
+.arrow {
+  font-size: 1.1rem;
+  color: var(--ink-mute);
+  transition:
+    transform 0.3s var(--ease-snap),
+    color 0.2s;
+}
+
+.card:hover .arrow {
+  color: var(--accent-ink);
+  transform: translate(3px, -3px);
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .arrow {
+    display: none;
+  }
+
+  .frame {
+    width: 44px;
+    height: 44px;
+    font-size: 1rem;
+  }
 }

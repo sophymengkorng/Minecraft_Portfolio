@@ -6,10 +6,11 @@ export default function NotFound() {
     <div className={styles.wrap}>
       <div className={styles.panel}>
         <h1 className={styles.code}>404</h1>
+        <p className={styles.line}>This chunk hasn&apos;t generated yet.</p>
         <p className={styles.line}>zsh: no such file or directory</p>
         <div className={styles.actions}>
           <Link className={styles.button} href="/">
-            CD&nbsp;~
+            Respawn at spawn
           </Link>
         </div>
       </div>

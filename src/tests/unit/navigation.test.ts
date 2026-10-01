@@ -7,7 +7,10 @@ import {
 } from "@/modules/portfolio/navigation";
 
 describe("normalizeCommand", () => {
-  it("trims, lowercases, and strips cd / ./ / trailing slash", () => {
+  it("trims, lowercases, and strips /, cd, tp, ./ and a trailing slash", () => {
+    expect(normalizeCommand("/tp ./projects/")).toBe("projects");
+    expect(normalizeCommand("TP skills")).toBe("skills");
+    expect(normalizeCommand("/")).toBe("");
     expect(normalizeCommand("  CD ./Projects/  ")).toBe("projects");
     expect(normalizeCommand("cd contact")).toBe("contact");
     expect(normalizeCommand("./skills")).toBe("skills");
@@ -20,8 +23,8 @@ describe("resolveCommand", () => {
     expect(resolveCommand("   ").kind).toBe("noop");
   });
 
-  it.each(["top", "~", "home", "cd ~"])("scrolls to the top for %s", (input) => {
-    expect(resolveCommand(input)).toEqual({ kind: "top", message: "→ top" });
+  it.each(["top", "~", "home", "cd ~", "/tp spawn"])("scrolls to the top for %s", (input) => {
+    expect(resolveCommand(input)).toEqual({ kind: "top", message: "Teleported to spawn" });
   });
 
   it.each(["about", "skills", "projects", "contact"])(
@@ -30,15 +33,23 @@ describe("resolveCommand", () => {
       expect(resolveCommand(input)).toEqual({
         kind: "section",
         section: input,
-        message: `→ /${input}`,
+        message: `Teleported to /${input}`,
       });
     },
   );
 
-  it("reports unknown directories without scrolling", () => {
+  it.each([
+    ["/time set night", "dark", "Set the time to night"],
+    ["time  set   day", "light", "Set the time to day"],
+    ["theme dark", "dark", "Set the time to night"],
+  ] as const)("switches the theme for %s", (input, theme, message) => {
+    expect(resolveCommand(input)).toEqual({ kind: "theme", theme, message });
+  });
+
+  it("reports unknown commands without scrolling", () => {
     expect(resolveCommand("resume")).toEqual({
       kind: "unknown",
-      message: "no such directory: resume",
+      message: "Unknown command: resume",
     });
   });
 

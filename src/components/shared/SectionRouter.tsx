@@ -2,7 +2,12 @@
 
 import { useEffect } from "react";
 import { sectionFromPath } from "@/modules/portfolio/navigation";
-import { navigateToSection, revealSection, revealTop } from "@/modules/portfolio/scroll";
+import {
+  navigateToSection,
+  navigateToTop,
+  revealSection,
+} from "@/modules/portfolio/scroll";
+import { useScroller } from "./SmoothScroll";
 
 /**
  * Turns `/projects` into "scroll to the projects band" on a page that is one
@@ -16,10 +21,12 @@ import { navigateToSection, revealSection, revealTop } from "@/modules/portfolio
  * leave this handler nothing to act on.
  */
 export function SectionRouter() {
+  const scroller = useScroller();
+
   useEffect(() => {
     // A direct load of /projects arrives scrolled to the top; jump, don't glide.
     const landing = sectionFromPath(window.location.pathname);
-    if (landing) revealSection(landing, "auto");
+    if (landing) revealSection(scroller, landing, true);
 
     function handleClick(event: MouseEvent) {
       const openingElsewhere =
@@ -42,17 +49,24 @@ export function SectionRouter() {
         return;
       }
 
+      // The brand mark and "back to top" both point at the home route.
+      if (anchor.pathname === "/" && !anchor.hash) {
+        event.preventDefault();
+        navigateToTop(scroller);
+        return;
+      }
+
       const section = sectionFromPath(anchor.pathname);
       if (!section) return;
 
       event.preventDefault();
-      navigateToSection(section);
+      navigateToSection(scroller, section);
     }
 
     function handlePopState() {
       const section = sectionFromPath(window.location.pathname);
-      if (section) revealSection(section);
-      else revealTop();
+      if (section) revealSection(scroller, section);
+      else scroller.toTop();
     }
 
     document.addEventListener("click", handleClick);
@@ -62,7 +76,7 @@ export function SectionRouter() {
       document.removeEventListener("click", handleClick);
       window.removeEventListener("popstate", handlePopState);
     };
-  }, []);
+  }, [scroller]);
 
   return null;
 }
