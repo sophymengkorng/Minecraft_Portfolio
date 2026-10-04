@@ -2,10 +2,18 @@ export type SectionId = "about" | "skills" | "projects" | "contact";
 
 export interface Project {
   readonly index: string;
+  /** Stable across renames — used as the React key. */
+  readonly slug: string;
   readonly name: string;
   readonly description: string;
   readonly stack: readonly string[];
-  readonly href: string;
+  /** Where the card goes: the live site, else the repo. `null` = not linked. */
+  readonly href: string | null;
+  /** A separate "source" link, only when the card already points elsewhere. */
+  readonly repoHref: string | null;
+  readonly coverUrl: string | null;
+  /** "Feature on homepage" in the console. */
+  readonly featured: boolean;
 }
 
 export interface SkillGroup {
