@@ -38,6 +38,183 @@ export function revealOnEnter(): void {
 }
 
 /**
+ * `[data-project-reveal]`: project cards rise in, in staggered batches, like
+ * `[data-reveal]`. Only cards showing when this runs are set up; one folded
+ * away or filtered out arrives through `projectFilter`'s own entrance
+ * instead, so it is never left invisible.
+ */
+export function revealProjects(): void {
+  const items = all("[data-project-reveal]").filter((item) => item.offsetParent !== null);
+  if (!items.length) return;
+
+  gsap.set(items, { autoAlpha: 0, y: 48, rotate: -1.5 });
+
+  const show = (batch: Element[]) =>
+    gsap.to(batch, { autoAlpha: 1, y: 0, rotate: 0, duration: 1, ease: EASE, stagger: 0.09, overwrite: true });
+
+  ScrollTrigger.batch(items, {
+    start: "top 92%",
+    onEnter: show,
+    onEnterBack: show,
+    onLeave: show,
+  });
+}
+
+/**
+ * `[data-wipe]`: a spotlight's screenshot opens from the left edge, a hard
+ * block-wipe in eight steps rather than a smooth slide, as it scrolls in.
+ */
+export function wipeIn(): void {
+  for (const element of all("[data-wipe]")) {
+    gsap.fromTo(
+      element,
+      { clipPath: "inset(0 100% 0 0)" },
+      {
+        clipPath: "inset(0 0% 0 0)",
+        duration: 0.9,
+        ease: "steps(8)",
+        scrollTrigger: { trigger: element, start: "top 85%", toggleActions: "play none none none" },
+      },
+    );
+  }
+}
+
+type FlipPlugin = typeof import("gsap/Flip").Flip;
+
+let flipPlugin: Promise<FlipPlugin> | null = null;
+
+/**
+ * Flip only animates the projects filter, far below the fold, so it stays out
+ * of the first-load bundle: fetched once, on first need, then registered.
+ */
+function loadFlip(): Promise<FlipPlugin> {
+  flipPlugin ??= import("gsap/Flip").then(({ Flip }) => {
+    gsap.registerPlugin(Flip);
+    return Flip;
+  });
+  return flipPlugin;
+}
+
+/**
+ * `[data-projects]`: the stack filter and the "Show all" fold over the
+ * server-rendered cards. Cards are shown and hidden in place (`display`), never
+ * re-mounted. With motion allowed, each change is a GSAP Flip: cards that stay
+ * glide to their new spots, leaving ones shrink out, arriving ones pop in.
+ *
+ * This is function, not decoration, so it runs for everyone; `animate` only
+ * decides whether the change is tweened. The fold itself is applied at once,
+ * before anything is measured; Flip is fetched when the reader first points at
+ * or focuses the controls, so it is usually there before the click. Tweens
+ * started from those later events are added to `context`, so unmounting the
+ * director still reverts them. The page below gets taller or shorter, so
+ * every ScrollTrigger is refreshed after each change.
+ */
+export function projectFilter(context: gsap.Context, animate: () => boolean): () => void {
+  const root = document.querySelector<HTMLElement>("[data-projects]");
+  if (!root) return () => {};
+
+  const toolbar = root.querySelector<HTMLElement>("[data-projects-toolbar]");
+  const status = root.querySelector<HTMLElement>("[data-projects-status]");
+  const more = root.querySelector<HTMLElement>("[data-projects-more]");
+  const moreButton = more?.querySelector("button");
+  const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-filter]"));
+  const items = Array.from(root.querySelectorAll<HTMLElement>("[data-project]"));
+  if (!items.length) return () => {};
+
+  let filter = "";
+  let expanded = false;
+
+  const apply = (flip: FlipPlugin | null) => {
+    const state = flip ? flip.getState(items) : null;
+    let shown = 0;
+    let matching = 0;
+
+    for (const item of items) {
+      const match = !filter || (item.dataset.tags ?? "").split("|").includes(filter);
+      const visible = match && (expanded || filter !== "" || !item.hasAttribute("data-extra"));
+      if (match) matching += 1;
+      if (visible) shown += 1;
+      item.style.display = visible ? "" : "none";
+    }
+
+    for (const button of buttons) {
+      button.setAttribute("aria-pressed", String(button.dataset.filter === filter));
+    }
+    if (more) more.hidden = expanded || filter !== "" || matching === shown;
+    if (status) {
+      status.textContent =
+        shown === items.length ? `${shown} projects` : `Showing ${shown} of ${filter ? matching : items.length}`;
+    }
+
+    if (!flip || !state) {
+      // A card an earlier Flip faded out must not come back invisible.
+      gsap.set(items, { clearProps: "opacity,visibility,transform" });
+      ScrollTrigger.refresh();
+      return;
+    }
+
+    flip.from(state, {
+      duration: 0.7,
+      ease: "power3.inOut",
+      absolute: true,
+      stagger: 0.03,
+      onEnter: (entering) =>
+        gsap.fromTo(
+          entering,
+          { autoAlpha: 0, scale: 0.85 },
+          { autoAlpha: 1, scale: 1, duration: 0.5, ease: "back.out(1.8)", stagger: 0.04, delay: 0.15 },
+        ),
+      onLeave: (leaving) => gsap.to(leaving, { autoAlpha: 0, scale: 0.85, duration: 0.3, ease: "power2.in" }),
+      onComplete: () => ScrollTrigger.refresh(),
+    });
+  };
+
+  /** Applies the current state, tweened when motion is allowed and Flip loads. */
+  const update = async () => {
+    const flip = animate() ? await loadFlip().catch(() => null) : null;
+    context.add(() => apply(flip));
+  };
+
+  const prefetch = () => {
+    if (animate()) loadFlip().catch(() => {});
+  };
+
+  const choose = (event: Event) => {
+    const next = (event.currentTarget as HTMLButtonElement).dataset.filter ?? "";
+    if (next === filter) return;
+    filter = next;
+    void update();
+  };
+  const expand = async () => {
+    expanded = true;
+    await update();
+    // The button that had focus is gone; land on the first newly shown card.
+    root.querySelector<HTMLElement>("[data-extra] a")?.focus({ preventScroll: true });
+  };
+
+  // Collapse to the folded view before anything is measured.
+  apply(null);
+  if (toolbar) toolbar.hidden = false;
+
+  const controls = [toolbar, more].filter((element): element is HTMLElement => element !== null);
+  for (const control of controls) {
+    control.addEventListener("pointerenter", prefetch, { once: true });
+    control.addEventListener("focusin", prefetch, { once: true });
+  }
+  buttons.forEach((button) => button.addEventListener("click", choose));
+  moreButton?.addEventListener("click", expand);
+
+  return () => {
+    for (const control of controls) {
+      control.removeEventListener("pointerenter", prefetch);
+      control.removeEventListener("focusin", prefetch);
+    }
+    buttons.forEach((button) => button.removeEventListener("click", choose));
+    moreButton?.removeEventListener("click", expand);
+  };
+}
+
+/**
  * `[data-lines]`: each rendered line slides up out of its own mask.
  *
  * Line breaks depend on the viewport, so this is the one split done in the

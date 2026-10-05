@@ -1,76 +1,305 @@
-.grid {
+/* Layout: toolbar → featured spotlights (one per row, window left, toast
+   right) → a denser grid of compact cards → the "Show all" fold. */
+.projects {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(18px, 2vw, 28px);
+  /* `minmax(0, …)`: the chip row scrolls sideways on phones, and an `auto`
+     track would grow to its full width instead, pushing cards off-screen. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(28px, 3.5vw, 48px);
+}
+
+.empty {
+  margin: 0;
+  font-family: var(--font-pixel);
+  color: var(--ink-mute);
+}
+
+/* ── Toolbar: stack filter + count ──────────────────────────────────── */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 24px;
+}
+
+.toolbar[hidden] {
+  display: none;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* An inventory slot: sunken while idle, raised and green once picked. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 2px solid var(--edge);
+  background: var(--gui);
+  color: var(--gui-ink);
+  font-family: var(--font-pixel);
+  font-size: var(--fs-pixel);
+  cursor: pointer;
+  box-shadow:
+    inset 2px 2px 0 var(--gui-hi),
+    inset -2px -2px 0 var(--gui-lo);
+  transition:
+    background-color 0.15s,
+    color 0.15s,
+    translate 0.15s var(--ease-out);
+}
+
+.chip:hover {
+  background: color-mix(in srgb, var(--gui) 80%, var(--accent));
+}
+
+.chip:active {
+  translate: 0 2px;
+}
+
+.chip[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  box-shadow:
+    inset 2px 2px 0 rgba(255, 255, 255, 0.35),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.3),
+    3px 3px 0 var(--shadow);
+}
+
+.chip:focus-visible,
+.moreButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* The stack size, like an item count in a slot's corner. */
+.count {
+  font-family: var(--font-mono);
+  font-size: 0.75em;
+  opacity: 0.75;
+}
+
+.status {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  color: var(--ink-mute);
+}
+
+.status::before {
+  content: "> ";
+  color: var(--accent-ink);
+}
+
+/* ── Lists ──────────────────────────────────────────────────────────── */
+
+.spotlights,
+.grid {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* An odd last card spans the row rather than leaving a hole. */
-.item:last-child:nth-child(odd) {
-  grid-column: 1 / -1;
+.spotlights {
+  display: grid;
+  gap: clamp(22px, 2.6vw, 36px);
 }
 
-.item {
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(18px, 2vw, 28px);
+}
+
+/* Three layers, one owner each: the <li> belongs to Flip (filtering), the
+   shell to the scroll-in reveal, the card to CSS hover. None fight over
+   `transform`. */
+.item,
+.shell {
   display: flex;
+  min-width: 0;
 }
 
-/* Hover lifts the card off its block shadow — transform only, plus one
-   shadow change on a single element. */
+/* Fills the cell, so every card in a row is the column's full width. */
+.shell {
+  flex: 1;
+}
+
+/* ── Card ───────────────────────────────────────────────────────────── */
+
 .card {
   position: relative;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 18px;
+  grid-template-rows: auto 1fr;
   width: 100%;
-  padding: clamp(18px, 2vw, 26px);
   border: 2px solid var(--edge);
   background: var(--panel);
   box-shadow: 5px 5px 0 var(--shadow);
   transition:
     transform 0.25s var(--ease-out),
-    box-shadow 0.25s var(--ease-out),
-    border-color 0.2s;
+    box-shadow 0.25s var(--ease-out);
 }
 
-.card:hover,
-.card:focus-visible {
+.card[data-linked]:hover,
+.card:has(.link:focus-visible) {
   transform: translate(-3px, -3px);
   box-shadow: 8px 8px 0 var(--accent);
 }
 
-/* The advancement frame: a bevelled square holding the number. */
-.frame {
+.card[data-featured] {
+  box-shadow: 5px 5px 0 var(--gold);
+}
+
+.card[data-featured][data-linked]:hover,
+.card[data-featured]:has(.link:focus-visible) {
+  box-shadow: 8px 8px 0 var(--gold);
+}
+
+/* The ring goes on the whole card, which is what the link stands for. */
+.card:has(.link:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ── The browser window ─────────────────────────────────────────────── */
+
+.media {
+  position: relative;
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  border-bottom: 2px solid var(--edge);
+}
+
+.chrome {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 7px 12px;
+  background: var(--gui);
+  border-bottom: 2px solid var(--edge);
+  box-shadow:
+    inset 0 2px 0 var(--gui-hi),
+    inset 0 -2px 0 var(--gui-lo);
+}
+
+/* Three square "traffic lights", drawn as one element. */
+.dots {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-right: 24px;
+  background: var(--redstone);
+  box-shadow:
+    12px 0 0 var(--splash),
+    24px 0 0 var(--accent);
+}
+
+.host {
+  min-width: 0;
+  overflow: hidden;
+  padding: 2px 8px;
+  background: var(--slot);
+  color: #f2f2f2;
+  font-family: var(--font-mono);
+  font-size: calc(var(--fs-mono) * 0.95);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow:
+    inset 2px 2px 0 rgba(0, 0, 0, 0.35),
+    inset -2px -2px 0 rgba(255, 255, 255, 0.12);
+}
+
+.shot {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--slot);
+}
+
+/* Screenshots start with the page's own nav, so the crop keeps the top. On
+   hover the page "scrolls" a little, like peeking down the site: a slight
+   zoom anchored at the top, then a slide up. Transform only, so the GPU
+   moves the already-painted image instead of repainting it every frame. */
+.shot img {
+  object-fit: cover;
+  object-position: top center;
+  transform-origin: top center;
+  transition: transform 1.2s var(--ease-out);
+}
+
+.card[data-linked]:hover .shot img {
+  transform: scale(1.08) translateY(-4%);
+}
+
+/* No cover yet: a stone-block tile with the number on it. */
+.placeholder {
+  position: absolute;
+  inset: 0;
   display: grid;
   place-items: center;
-  width: 56px;
-  height: 56px;
+  background: repeating-conic-gradient(var(--stone-btn) 0 25%, var(--slot) 0 50%) 0 0 / 32px 32px;
+  color: #ffffff;
+  font-family: var(--font-pixel);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.45);
+}
+
+/* The advancement frame: a bevelled square holding the number, hanging off
+   the bottom edge of the screenshot. */
+.frame {
+  position: absolute;
+  left: clamp(14px, 1.6vw, 22px);
+  bottom: -24px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
   border: 2px solid var(--edge);
   background: var(--stone-btn);
   color: #ffffff;
   font-family: var(--font-pixel);
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
   box-shadow:
     inset 3px 3px 0 rgba(255, 255, 255, 0.3),
-    inset -3px -3px 0 rgba(0, 0, 0, 0.35);
+    inset -3px -3px 0 rgba(0, 0, 0, 0.35),
+    3px 3px 0 var(--shadow);
   transition:
     background-color 0.2s,
     transform 0.3s var(--ease-snap);
 }
 
-.card:hover .frame {
+.card[data-featured] .frame {
+  background: var(--gold);
+  color: #1a1200;
+}
+
+.card[data-linked]:hover .frame {
   background: var(--accent);
   color: var(--accent-contrast);
   transform: rotate(-8deg);
 }
 
+/* ── The toast ──────────────────────────────────────────────────────── */
+
+/* A column whose action row sinks to the bottom, so cards in a row line up. */
 .body {
-  display: grid;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
   gap: 8px;
   min-width: 0;
+  padding: 38px clamp(16px, 1.8vw, 24px) clamp(16px, 1.8vw, 22px);
 }
 
 .toast {
@@ -80,6 +309,7 @@
 }
 
 .name {
+  margin: 0;
   font-family: var(--font-display);
   font-size: var(--fs-project);
   font-weight: 700;
@@ -87,7 +317,22 @@
   overflow-wrap: anywhere;
 }
 
+.link {
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+}
+
+/* Stretches the name's link over the card, so the card is the click target. */
+.link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
 .description {
+  margin: 0;
+  max-width: 62ch;
   line-height: 1.55;
   color: var(--ink-soft);
 }
@@ -96,7 +341,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 6px;
+  margin: 4px 0 10px;
 }
 
 .tag {
@@ -108,37 +353,257 @@
   color: var(--ink-soft);
 }
 
-.arrow {
-  font-size: 1.1rem;
-  color: var(--ink-mute);
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 2px dashed var(--line);
+}
+
+.visit,
+.source {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 2px solid var(--edge);
+  font-family: var(--font-pixel);
+  font-size: var(--fs-pixel);
+  text-decoration: none;
   transition:
-    transform 0.3s var(--ease-snap),
-    color 0.2s;
+    background-color 0.2s,
+    color 0.2s,
+    transform 0.3s var(--ease-snap);
 }
 
-.card:hover .arrow {
-  color: var(--accent-ink);
-  transform: translate(3px, -3px);
+/* Not a link itself — it labels the card's stretched link. */
+.visit {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  box-shadow:
+    inset 2px 2px 0 rgba(255, 255, 255, 0.35),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.3);
 }
 
-@media (max-width: 900px) {
+.card[data-linked]:hover .visit {
+  transform: translate(2px, -2px);
+}
+
+/* Layered above the stretched link so it stays its own click target. */
+.source {
+  position: relative;
+  z-index: 1;
+  background: var(--gui);
+  color: var(--gui-ink);
+  box-shadow:
+    inset 2px 2px 0 var(--gui-hi),
+    inset -2px -2px 0 var(--gui-lo);
+}
+
+.source:hover {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.source:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Compact: the grid card ─────────────────────────────────────────── */
+
+/* Only the rarer toast earns a line on a small card. */
+.compact:not([data-featured]) .toast {
+  display: none;
+}
+
+.compact .chrome {
+  padding: 5px 10px;
+}
+
+.compact .dots {
+  width: 6px;
+  height: 6px;
+  margin-right: 18px;
+  box-shadow:
+    9px 0 0 var(--splash),
+    18px 0 0 var(--accent);
+}
+
+.compact .frame {
+  width: 40px;
+  height: 40px;
+  bottom: -20px;
+  font-size: 0.95rem;
+}
+
+.compact .body {
+  padding-top: 32px;
+}
+
+.compact .name {
+  font-size: clamp(1.05rem, 1.1vw, 1.25rem);
+}
+
+/* Three lines at most, so a long description can't stretch the whole row. */
+.compact .description {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  font-size: 0.94em;
+}
+
+.compact .visit,
+.compact .source {
+  min-height: 30px;
+  padding: 0 10px;
+}
+
+/* ── Spotlight: window left, toast right ────────────────────────────── */
+
+@media (min-width: 901px) {
+  .spotlight {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    grid-template-rows: none;
+  }
+
+  .spotlight .media {
+    border-bottom: 0;
+    border-right: 2px solid var(--edge);
+  }
+
+  .spotlight .frame {
+    left: auto;
+    right: -26px;
+    bottom: clamp(16px, 2vw, 24px);
+  }
+
+  .spotlight .body {
+    justify-content: center;
+    padding: clamp(24px, 3vw, 44px);
+    padding-left: clamp(40px, 4vw, 56px);
+  }
+
+  .spotlight .actions {
+    margin-top: 6px;
+  }
+
+  /* Alternate sides down the list, so a run of spotlights zig-zags. */
+  .spotlights > .item:nth-child(even) .spotlight {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  }
+
+  .spotlights > .item:nth-child(even) .spotlight .media {
+    order: 2;
+    border-right: 0;
+    border-left: 2px solid var(--edge);
+  }
+
+  .spotlights > .item:nth-child(even) .spotlight .frame {
+    right: auto;
+    left: -26px;
+  }
+
+  .spotlights > .item:nth-child(even) .spotlight .body {
+    padding-left: clamp(24px, 3vw, 44px);
+    padding-right: clamp(40px, 4vw, 56px);
+  }
+}
+
+/* ── Show all ───────────────────────────────────────────────────────── */
+
+.more {
+  display: flex;
+  justify-content: center;
+}
+
+.more[hidden] {
+  display: none;
+}
+
+.moreButton {
+  min-height: 46px;
+  padding: 0 24px;
+  border: 2px solid var(--edge);
+  background: var(--stone-btn);
+  color: #ffffff;
+  font-family: var(--font-pixel);
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+  box-shadow:
+    inset 3px 3px 0 rgba(255, 255, 255, 0.3),
+    inset -3px -4px 0 rgba(0, 0, 0, 0.3),
+    4px 4px 0 var(--shadow);
+  transition:
+    background-color 0.2s,
+    translate 0.15s var(--ease-out),
+    box-shadow 0.15s var(--ease-out);
+}
+
+.moreButton:hover {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  text-shadow: none;
+}
+
+.moreButton:active {
+  translate: 4px 4px;
+  box-shadow:
+    inset 3px 3px 0 rgba(255, 255, 255, 0.3),
+    inset -3px -4px 0 rgba(0, 0, 0, 0.3),
+    0 0 0 var(--shadow);
+}
+
+/* ── Breakpoints ────────────────────────────────────────────────────── */
+
+@media (max-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
   .grid {
     grid-template-columns: 1fr;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* One swipeable row of chips instead of a wall of them. */
+  .filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-inline: -4px;
+    padding: 4px 4px 8px;
+    scrollbar-width: thin;
+  }
+
+  .chip {
+    flex: none;
   }
 }
 
 @media (max-width: 480px) {
-  .card {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-
-  .arrow {
-    display: none;
-  }
-
   .frame {
     width: 44px;
     height: 44px;
+    bottom: -22px;
     font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card[data-linked]:hover .shot img {
+    transform: none;
   }
 }

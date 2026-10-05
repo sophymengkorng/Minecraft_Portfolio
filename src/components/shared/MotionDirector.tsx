@@ -7,10 +7,13 @@ import {
   hotbar,
   magnetic,
   popIn,
+  projectFilter,
   revealLines,
   revealOnEnter,
+  revealProjects,
   scrambleText,
   scrollProgress,
+  wipeIn,
   xpLevel,
 } from "@/modules/motion/effects";
 import { gsap, ScrollTrigger, useGSAP } from "@/modules/motion/gsap";
@@ -27,8 +30,12 @@ const MOTION_OK = "(prefers-reduced-motion: no-preference)";
  * included — when the condition stops matching.
  */
 export function MotionDirector() {
-  useGSAP(() => {
+  useGSAP((context) => {
     const media = gsap.matchMedia();
+
+    // Before any trigger is measured: it folds the project grid. It filters
+    // for everyone; only the Flip between states needs motion.
+    const stopProjects = projectFilter(context, () => window.matchMedia(MOTION_OK).matches);
 
     media.add(MOTION_OK, () => {
       heroOutro();
@@ -36,6 +43,8 @@ export function MotionDirector() {
       fillOnScroll();
       revealLines();
       revealOnEnter();
+      revealProjects();
+      wipeIn();
       const stopScramble = scrambleText();
       const stopHotbar = hotbar();
       return () => {
@@ -54,7 +63,10 @@ export function MotionDirector() {
     // Web fonts change line heights, which moves every trigger below the fold.
     document.fonts.ready.then(() => ScrollTrigger.refresh());
 
-    return () => media.revert();
+    return () => {
+      stopProjects();
+      media.revert();
+    };
   });
 
   return null;

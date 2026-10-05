@@ -1,6 +1,18 @@
 import type { NextConfig } from "next";
+import { consoleApiUrl } from "./src/config/console";
 
 const isDev = process.env.NODE_ENV === "development";
+
+/**
+ * Project covers are served from the console's `/storage`. They go through
+ * `next/image`, so the browser loads them from this origin and `img-src 'self'`
+ * holds; only the console's storage path is allowed upstream. Mirrors
+ * the projects fetch: both read `consoleApiUrl()`, which also rejects a
+ * plain-http address. Covers are https-only outside `next dev`, so a swapped
+ * image can't ride in on plain HTTP either; in dev, a local console serves
+ * them over http.
+ */
+const consoleUrl = consoleApiUrl();
 
 /**
  * A02 (Security Misconfiguration): the site ships no headers by default, so the
@@ -32,6 +44,17 @@ const csp = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  images: {
+    remotePatterns: (isDev ? (["http", "https"] as const) : (["https"] as const)).map((protocol) => ({
+      protocol,
+      hostname: consoleUrl.hostname,
+      port: consoleUrl.port,
+      pathname: "/storage/**",
+    })),
+    // A local console (127.0.0.1) is a private IP, which the optimizer refuses
+    // by default (SSRF guard). Only lifted for `next dev`.
+    dangerouslyAllowLocalIP: isDev,
+  },
   async headers() {
     return [
       {

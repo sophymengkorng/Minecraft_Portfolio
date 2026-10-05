@@ -1,4 +1,4 @@
-import type { ContactLink, MetaRow, Project, SectionCopy, SectionId, SkillGroup } from "./types";
+import type { ContactLink, MetaRow, SectionCopy, SectionId, SkillGroup } from "./types";
 
 export const IDENTITY = {
   name: "Somonor Hong",
@@ -40,6 +40,9 @@ export const DEBUG_TITLE = "somonor-hong.dev (vanilla)";
 /** The toast line above every project, like an advancement popping in. */
 export const PROJECT_TOAST = "Advancement made!";
 
+/** Featured projects pop the rarer toast. */
+export const FEATURED_PROJECT_TOAST = "Challenge complete!";
+
 /** The contact section's server-list heading and the line under the email. */
 export const CONTACT_COPY = {
   directConnect: "Direct connect",
@@ -57,46 +60,6 @@ export const SKILL_GROUPS: readonly SkillGroup[] = [
   { heading: "Frontend", items: ["React", "Next.js"] },
   { heading: "Infra & Data", items: ["Docker", "Redis", "Kafka"] },
   { heading: "Tools", items: ["GitHub", "VS Code", "Arch Linux"] },
-];
-
-export const PROJECTS: readonly Project[] = [
-  {
-    index: "01",
-    name: "WraithNote",
-    description: "Block-based note-taking web app.",
-    stack: ["Next.js", "NestJS", "RabbitMQ", "Redis", "Postgres"],
-    href: "https://wraithnote.cachewraith.com/",
-  },
-  {
-    index: "02",
-    name: "cachewraith-desktop-pet",
-    description: "Desktop pet app.",
-    stack: ["Tauri 2", "React", "PixiJS", "XState", "Rust"],
-    // Releases rather than the repo: this one is something to download and run.
-    href: "https://github.com/cachewraith/cachewraith-desktop-pet/releases",
-  },
-  {
-    index: "03",
-    name: "Weather Web",
-    description: "Next.js weather app.",
-    stack: ["Next.js"],
-    href: "https://weather.app.hushstackcambodia.site/",
-  },
-  {
-    index: "04",
-    name: "laravel-template-structure",
-    description: "Installer package that scaffolds a layered Laravel architecture.",
-    stack: ["Laravel", "PHP", "Blade", "Sanctum", "Docker"],
-    // Packagist rather than the repo: this one is consumed with `composer require`.
-    href: "https://packagist.org/packages/cachewraith/laravel-template-structure",
-  },
-  {
-    index: "05",
-    name: "DBML Previewer",
-    description: "Live DBML diagram editor and previewer — write DBML, see the ER diagram instantly.",
-    stack: ["Next.js", "React", "React Flow", "DBML", "Tailwind CSS"],
-    href: "https://dbml.hushstackcambodia.site/",
-  },
 ];
 
 /** The contact section's headline link. */
@@ -131,3 +94,6 @@ export const FOOTER = {
   builtWith: "Built with Next.js, GSAP & Three.js",
   disclaimer: "Not an official Minecraft product. Not affiliated with Mojang or Microsoft.",
 } as const;
+
+/** Shown in the projects section when the console has nothing published. */
+export const PROJECTS_EMPTY = "Nothing crafted yet — check back soon.";
