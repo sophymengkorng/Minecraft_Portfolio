@@ -42,6 +42,7 @@ describe("toProject", () => {
       description: "Block-based note-taking web app.",
       stack: ["Next.js", "NestJS"],
       href: "https://wraithnote.cachewraith.com/",
+      hrefLink: "live",
       repoHref: "https://github.com/cachewraith/wraithnote",
       coverUrl: "https://console.cachewraith.com/storage/projects/a.webp",
       featured: true,
@@ -51,6 +52,7 @@ describe("toProject", () => {
   it("falls back to the repo as the card link, without a duplicate source link", () => {
     const project = toProject({ ...item, liveUrl: null }, 0);
     expect(project.href).toBe(item.repoUrl);
+    expect(project.hrefLink).toBe("repo");
     expect(project.repoHref).toBeNull();
   });
 
@@ -59,7 +61,7 @@ describe("toProject", () => {
       { ...item, liveUrl: null, repoUrl: null, description: null, coverUrl: null, isFeatured: false },
       0,
     );
-    expect(project).toMatchObject({ href: null, repoHref: null, description: "", coverUrl: null, featured: false });
+    expect(project).toMatchObject({ href: null, hrefLink: null, repoHref: null, description: "", coverUrl: null, featured: false });
   });
 });
 

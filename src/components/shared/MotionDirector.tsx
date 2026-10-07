@@ -2,6 +2,7 @@
 
 import {
   activeNavLink,
+  blockBreak,
   fillOnScroll,
   heroOutro,
   hotbar,
@@ -13,7 +14,6 @@ import {
   revealProjects,
   scrambleText,
   scrollProgress,
-  wipeIn,
   xpLevel,
 } from "@/modules/motion/effects";
 import { gsap, ScrollTrigger, useGSAP } from "@/modules/motion/gsap";
@@ -44,10 +44,11 @@ export function MotionDirector() {
       revealLines();
       revealOnEnter();
       revealProjects();
-      wipeIn();
+      const stopBlocks = blockBreak();
       const stopScramble = scrambleText();
       const stopHotbar = hotbar();
       return () => {
+        stopBlocks();
         stopScramble();
         stopHotbar();
       };

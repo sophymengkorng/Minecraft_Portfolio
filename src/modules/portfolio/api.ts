@@ -49,6 +49,7 @@ export function toProject(item: ConsoleProject, position: number): Project {
     description: item.description ?? "",
     stack: Array.isArray(item.stack) ? item.stack : [],
     href: live ?? repo,
+    hrefLink: live ? "live" : repo ? "repo" : null,
     repoHref: live ? repo : null,
     coverUrl: httpUrl(item.coverUrl),
     featured: item.isFeatured === true,

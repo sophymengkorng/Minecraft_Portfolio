@@ -38,19 +38,20 @@ export function revealOnEnter(): void {
 }
 
 /**
- * `[data-project-reveal]`: project cards rise in, in staggered batches, like
- * `[data-reveal]`. Only cards showing when this runs are set up; one folded
- * away or filtered out arrives through `projectFilter`'s own entrance
- * instead, so it is never left invisible.
+ * `[data-project-reveal]`: project cards are placed like blocks — dropped in
+ * from just above with a small landing bounce — in staggered batches. Only
+ * cards showing when this runs are set up; one folded away or filtered out
+ * arrives through `projectFilter`'s own entrance instead, so it is never left
+ * invisible.
  */
 export function revealProjects(): void {
   const items = all("[data-project-reveal]").filter((item) => item.offsetParent !== null);
   if (!items.length) return;
 
-  gsap.set(items, { autoAlpha: 0, y: 48, rotate: -1.5 });
+  gsap.set(items, { autoAlpha: 0, y: -28, scale: 1.03 });
 
   const show = (batch: Element[]) =>
-    gsap.to(batch, { autoAlpha: 1, y: 0, rotate: 0, duration: 1, ease: EASE, stagger: 0.09, overwrite: true });
+    gsap.to(batch, { autoAlpha: 1, y: 0, scale: 1, duration: 0.7, ease: "back.out(1.6)", stagger: 0.1, overwrite: true });
 
   ScrollTrigger.batch(items, {
     start: "top 92%",
@@ -61,22 +62,83 @@ export function revealProjects(): void {
 }
 
 /**
- * `[data-wipe]`: a spotlight's screenshot opens from the left edge, a hard
- * block-wipe in eight steps rather than a smooth slide, as it scrolls in.
+ * `[data-blocks]`: a screenshot starts walled in by a grid of stone blocks
+ * (the attribute is the column count) that break off and tumble away in
+ * random order as it scrolls in — scrubbed, so scrolling back up rebuilds the
+ * wall. Hovering sends a wave of selection blocks out from the cell under
+ * the pointer, using GSAP's grid stagger.
+ *
+ * The blocks are decoration added here, never in the server markup, so
+ * without JS or with reduced motion the screenshot is simply there. A shot
+ * hidden by the projects fold is measured again by the refresh that follows
+ * every filter change, so its wall matches wherever it lands.
  */
-export function wipeIn(): void {
-  for (const element of all("[data-wipe]")) {
-    gsap.fromTo(
-      element,
-      { clipPath: "inset(0 100% 0 0)" },
-      {
-        clipPath: "inset(0 0% 0 0)",
-        duration: 0.9,
-        ease: "steps(8)",
-        scrollTrigger: { trigger: element, start: "top 85%", toggleActions: "play none none none" },
-      },
-    );
-  }
+export function blockBreak(): () => void {
+  const cleanups = all("[data-blocks]").map((shot) => {
+    const cols = Number(shot.dataset.blocks) || 8;
+    const rows = Math.max(1, Math.round((cols * 9) / 16));
+    const grid: [number, number] = [rows, cols];
+
+    const wall = document.createElement("span");
+    wall.setAttribute("data-block-wall", "");
+    wall.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    wall.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+    const blocks = Array.from({ length: rows * cols }, () => {
+      const block = document.createElement("span");
+      block.setAttribute("data-block", String(Math.floor(Math.random() * 3)));
+      return wall.appendChild(block);
+    });
+    shot.appendChild(wall);
+
+    // Each block falls on its own random path; `power2.in` is the gravity.
+    gsap.to(blocks, {
+      scale: 0.3,
+      autoAlpha: 0,
+      y: () => gsap.utils.random(40, 140),
+      x: () => gsap.utils.random(-40, 40),
+      rotation: () => gsap.utils.random(-120, 120),
+      ease: "power2.in",
+      stagger: { amount: 0.8, from: "random", grid },
+      scrollTrigger: { trigger: shot, start: "top 90%", end: "center 62%", scrub: 0.6 },
+    });
+
+    // The selection wave: a separate layer of blocks, so it never fights the
+    // scrubbed wall over the same properties.
+    const wave = wall.cloneNode(false) as HTMLElement;
+    wave.setAttribute("data-block-wave", "");
+    wave.removeAttribute("data-block-wall");
+    const glints = blocks.map(() => wave.appendChild(document.createElement("span")));
+    shot.appendChild(wave);
+    gsap.set(glints, { scale: 0, autoAlpha: 0 });
+
+    const card = shot.closest<HTMLElement>("[data-scramble-row]") ?? shot;
+    const ripple = (event: PointerEvent) => {
+      const box = shot.getBoundingClientRect();
+      const col = gsap.utils.clamp(0, cols - 1, Math.floor(((event.clientX - box.left) / box.width) * cols));
+      const row = gsap.utils.clamp(0, rows - 1, Math.floor(((event.clientY - box.top) / box.height) * rows));
+      gsap.fromTo(
+        glints,
+        { scale: 0, autoAlpha: 0 },
+        {
+          keyframes: [
+            { scale: 0.86, autoAlpha: 1, duration: 0.18, ease: "power2.out" },
+            { scale: 0, autoAlpha: 0, duration: 0.32, ease: "power2.in" },
+          ],
+          stagger: { each: 0.035, from: row * cols + col, grid },
+          overwrite: true,
+        },
+      );
+    };
+    card.addEventListener("pointerenter", ripple);
+
+    return () => {
+      card.removeEventListener("pointerenter", ripple);
+      wall.remove();
+      wave.remove();
+    };
+  });
+
+  return () => cleanups.forEach((cleanup) => cleanup());
 }
 
 type FlipPlugin = typeof import("gsap/Flip").Flip;

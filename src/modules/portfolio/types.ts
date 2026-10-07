@@ -1,5 +1,8 @@
 export type SectionId = "about" | "skills" | "projects" | "contact";
 
+/** Which of a project's links was followed — the console counts clicks per link. */
+export type ProjectLink = "live" | "repo";
+
 export interface Project {
   readonly index: string;
   /** Stable across renames — used as the React key. */
@@ -9,6 +12,8 @@ export interface Project {
   readonly stack: readonly string[];
   /** Where the card goes: the live site, else the repo. `null` = not linked. */
   readonly href: string | null;
+  /** Whether `href` is the live site or the repo. `null` = not linked. */
+  readonly hrefLink: ProjectLink | null;
   /** A separate "source" link, only when the card already points elsewhere. */
   readonly repoHref: string | null;
   readonly coverUrl: string | null;
