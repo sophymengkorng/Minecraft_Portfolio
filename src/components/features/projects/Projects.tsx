@@ -133,7 +133,10 @@ function hostOf(href: string | null): string | null {
  * card, so the card is one click target and one tab stop; a repo link, when
  * the card already points at the live site, is layered above that stretch —
  * a second anchor can't nest inside the first. Names decode as they enter and
- * again on hover (`data-scramble` inside `data-scramble-row`).
+ * again on hover (`data-scramble` inside `data-scramble-row`). The
+ * screenshot is walled in by stone blocks that break away as it scrolls in,
+ * and a selection wave ripples from the pointer on hover (`data-blocks`, the
+ * number of columns).
  */
 function ProjectCard({ project, variant }: { project: Project; variant: Variant }) {
   const linked = project.href !== null;
@@ -154,7 +157,7 @@ function ProjectCard({ project, variant }: { project: Project; variant: Variant 
           <span className={styles.dots} />
           <span className={styles.host}>{host ?? project.slug}</span>
         </span>
-        <span className={styles.shot} {...(spotlight ? { "data-wipe": "" } : {})}>
+        <span className={styles.shot} data-blocks={spotlight ? 12 : 8}>
           {project.coverUrl ? (
             <Image
               src={project.coverUrl}
