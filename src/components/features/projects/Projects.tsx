@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { ArrowUpRightIcon } from "@/components/ui/Icons";
 import { Section } from "@/components/ui/Section";
+import { consoleApiUrl } from "@/config/console";
 import { getProjects } from "@/modules/portfolio/api";
 import { SECTION_IDS } from "@/modules/portfolio/constants";
 import {
@@ -19,6 +20,7 @@ import {
   tagsAttribute,
 } from "@/modules/portfolio/projects";
 import type { Project } from "@/modules/portfolio/types";
+import { ProjectClickTracker } from "./ProjectClickTracker";
 import styles from "./Projects.module.css";
 
 type Variant = "spotlight" | "compact";
@@ -33,6 +35,8 @@ type Variant = "spotlight" | "compact";
  * the toolbar stays `hidden`. The filter, the fold and their Flip animation
  * are the `[data-projects]` effect in MotionDirector — the cards never
  * re-mount, so the scroll-in and scramble effects bound to them survive.
+ * Following a card's link or its source link is counted in the console
+ * (`ProjectClickTracker`).
  */
 export async function Projects() {
   const projects = await getProjects();
@@ -47,6 +51,7 @@ export async function Projects() {
           <p className={styles.empty}>{PROJECTS_EMPTY}</p>
         ) : (
           <div className={styles.projects} data-projects data-collapsed-count={COLLAPSED_COUNT}>
+            <ProjectClickTracker endpoint={`${consoleApiUrl().href}/portfolio/projects`} />
             {(filters.length > 0 || folds) && (
               <div className={styles.toolbar} data-projects-toolbar hidden>
                 {filters.length > 0 && (
@@ -150,6 +155,7 @@ function ProjectCard({ project, variant }: { project: Project; variant: Variant 
       className={`${styles.card} ${styles[variant]}`}
       data-linked={linked || undefined}
       data-featured={project.featured || undefined}
+      data-project-slug={project.slug}
       data-scramble-row
     >
       <div className={styles.media} aria-hidden="true">
@@ -185,6 +191,7 @@ function ProjectCard({ project, variant }: { project: Project; variant: Variant 
             <a
               className={styles.link}
               href={project.href!}
+              data-project-link={project.hrefLink ?? undefined}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -226,6 +233,7 @@ function ProjectCard({ project, variant }: { project: Project; variant: Variant 
               <a
                 className={styles.source}
                 href={project.repoHref}
+                data-project-link="repo"
                 target="_blank"
                 rel="noopener noreferrer"
               >

@@ -14,6 +14,7 @@ const project = (slug: string, stack: string[], featured = false): Project => ({
   description: "",
   stack,
   href: null,
+  hrefLink: null,
   repoHref: null,
   coverUrl: null,
   featured,
