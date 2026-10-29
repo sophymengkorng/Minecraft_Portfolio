@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-import { consoleApiUrl } from "./src/config/console";
+import { consoleApiUrl } from "./src/config/console.ts";
 
 const isDev = process.env.NODE_ENV === "development";
 

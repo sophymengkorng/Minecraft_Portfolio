@@ -47,14 +47,20 @@
 
 .name {
   font-family: var(--font-display);
-  font-size: var(--fs-display);
+  /* Keep the full surname on one line instead of allowing the title to split
+     into an accidental third line on smaller screens. */
+  font-size: clamp(3rem, 5.4vw, 5.25rem);
   font-weight: 700;
   line-height: 0.9;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.015em;
   color: var(--ink);
   /* A block-offset shadow in grass green: the Minecraft-logo extrusion,
      flattened to one cheap layer. */
   text-shadow: 0.05em 0.05em 0 var(--accent);
+}
+
+.name .line {
+  white-space: nowrap;
 }
 
 .name [data-char] {

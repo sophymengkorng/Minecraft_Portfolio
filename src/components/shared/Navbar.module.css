@@ -31,18 +31,16 @@
 }
 
 /* A grass block in two gradients: green cap with a ragged edge over dirt. */
-.block {
-  width: 22px;
-  height: 22px;
+.brandLogo {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  image-rendering: pixelated;
   border: 2px solid var(--edge);
-  background:
-    linear-gradient(90deg, #5d9b34 0 25%, #4f8a2b 25% 50%, #6aac3c 50% 75%, #5d9b34 75%) top / 100% 30% no-repeat,
-    linear-gradient(90deg, transparent 0 25%, #5d9b34 25% 50%, transparent 50%) 0 30% / 100% 12% no-repeat,
-    linear-gradient(90deg, #7a5536 0 33%, #6b4a2f 33% 66%, #8b6240 66%);
   transition: transform 0.4s var(--ease-snap);
 }
 
-.brand:hover .block {
+.brand:hover .brandLogo {
   transform: rotate(-12deg) scale(1.1);
 }
 

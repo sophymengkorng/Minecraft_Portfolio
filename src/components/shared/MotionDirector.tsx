@@ -2,7 +2,6 @@
 
 import {
   activeNavLink,
-  blockBreak,
   fillOnScroll,
   heroOutro,
   hotbar,
@@ -44,11 +43,9 @@ export function MotionDirector() {
       revealLines();
       revealOnEnter();
       revealProjects();
-      const stopBlocks = blockBreak();
       const stopScramble = scrambleText();
       const stopHotbar = hotbar();
       return () => {
-        stopBlocks();
         stopScramble();
         stopHotbar();
       };

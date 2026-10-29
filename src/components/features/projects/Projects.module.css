@@ -147,6 +147,17 @@
     box-shadow 0.25s var(--ease-out);
 }
 
+.mediaLink {
+  position: relative;
+  z-index: 2;
+  display: block;
+  min-width: 0;
+  height: 100%;
+  overflow: visible;
+  color: inherit;
+  text-decoration: none;
+}
+
 .card[data-linked]:hover,
 .card:has(.link:focus-visible) {
   transform: translate(-3px, -3px);
@@ -172,14 +183,16 @@
 
 .media {
   position: relative;
-  display: grid;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
+  width: 100%;
   border-bottom: 2px solid var(--edge);
 }
 
 .chrome {
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   gap: 12px;
   min-width: 0;
@@ -223,22 +236,25 @@
   display: block;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  background: var(--slot);
+  background: var(--panel);
 }
 
-/* Screenshots start with the page's own nav, so the crop keeps the top. On
-   hover the page "scrolls" a little, like peeking down the site: a slight
-   zoom anchored at the top, then a slide up. Transform only, so the GPU
-   moves the already-painted image instead of repainting it every frame. */
+/* Fill the browser viewport exactly. The three source screenshots share the
+   same dimensions, so this keeps every project frame visually identical. */
 .shot img {
-  object-fit: cover;
-  object-position: top center;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: center;
   transform-origin: top center;
   transition: transform 1.2s var(--ease-out);
 }
 
 .card[data-linked]:hover .shot img {
-  transform: scale(1.08) translateY(-4%);
+  transform: none;
 }
 
 /* The block wall over a screenshot and the selection wave above it, both
@@ -514,15 +530,20 @@
     grid-template-rows: none;
   }
 
+  .spotlight .shot {
+    flex: 0 0 auto;
+    aspect-ratio: 1586 / 992;
+  }
+
   .spotlight .media {
     border-bottom: 0;
     border-right: 2px solid var(--edge);
   }
 
   .spotlight .frame {
-    left: auto;
-    right: -26px;
-    bottom: clamp(16px, 2vw, 24px);
+    left: clamp(14px, 1.6vw, 22px);
+    right: auto;
+    bottom: -24px;
   }
 
   .spotlight .body {
@@ -554,6 +575,27 @@
   .spotlights > .item:nth-child(even) .spotlight .body {
     padding-left: clamp(24px, 3vw, 44px);
     padding-right: clamp(40px, 4vw, 56px);
+  }
+
+  /* Final layout override: every featured card matches project one. */
+  .spotlights > .item:nth-child(even) .spotlight {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  }
+
+  .spotlights > .item:nth-child(even) .spotlight .media {
+    order: initial;
+    border-right: 2px solid var(--edge);
+    border-left: 0;
+  }
+
+  .spotlights > .item:nth-child(even) .spotlight .frame {
+    right: auto;
+    left: clamp(14px, 1.6vw, 22px);
+  }
+
+  .spotlights > .item:nth-child(even) .spotlight .body {
+    padding-left: clamp(40px, 4vw, 56px);
+    padding-right: clamp(24px, 3vw, 44px);
   }
 }
 

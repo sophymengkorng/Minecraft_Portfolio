@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { SECTION_ORDER } from "@/modules/portfolio/constants";
 import { SECTION_COPY } from "@/modules/portfolio/content";
 import { sectionHref } from "@/modules/portfolio/navigation";
@@ -17,8 +18,8 @@ export function Navbar() {
         {/* A plain anchor on purpose: SectionRouter upgrades it to a smooth scroll to the top (see there for why not next/link). */}
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a href="/" className={styles.brand}>
-          <span className={styles.block} aria-hidden="true" />
-          cachewraith
+          <Image className={styles.brandLogo} src="/ninja-logo.png" alt="" width={26} height={26} priority />
+          sophymengkorng
           <span className="sr-only">, back to top</span>
         </a>
         <ul className={styles.links}>

@@ -27,6 +27,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: siteConfig.title,
   description: siteConfig.description,
+  icons: {
+    icon: "/ninja-logo.png",
+    shortcut: "/ninja-logo.png",
+    apple: "/ninja-logo.png",
+  },
   openGraph: {
     title: siteConfig.title,
     description: siteConfig.description,
@@ -38,7 +43,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: siteConfig.title,
     description: siteConfig.description,
-    creator: "@cachewraith",
+    creator: "@sophymengkorng",
   },
 };
 

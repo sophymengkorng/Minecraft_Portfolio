@@ -2,7 +2,6 @@ import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { ArrowUpRightIcon } from "@/components/ui/Icons";
 import { Section } from "@/components/ui/Section";
-import { consoleApiUrl } from "@/config/console";
 import { getProjects } from "@/modules/portfolio/api";
 import { SECTION_IDS } from "@/modules/portfolio/constants";
 import {
@@ -20,7 +19,6 @@ import {
   tagsAttribute,
 } from "@/modules/portfolio/projects";
 import type { Project } from "@/modules/portfolio/types";
-import { ProjectClickTracker } from "./ProjectClickTracker";
 import styles from "./Projects.module.css";
 
 type Variant = "spotlight" | "compact";
@@ -51,7 +49,6 @@ export async function Projects() {
           <p className={styles.empty}>{PROJECTS_EMPTY}</p>
         ) : (
           <div className={styles.projects} data-projects data-collapsed-count={COLLAPSED_COUNT}>
-            <ProjectClickTracker endpoint={`${consoleApiUrl().href}/portfolio/projects`} />
             {(filters.length > 0 || folds) && (
               <div className={styles.toolbar} data-projects-toolbar hidden>
                 {filters.length > 0 && (
@@ -158,17 +155,24 @@ function ProjectCard({ project, variant }: { project: Project; variant: Variant 
       data-project-slug={project.slug}
       data-scramble-row
     >
+      <a
+        className={styles.mediaLink}
+        href={project.href ?? undefined}
+        {...(linked ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        aria-label={linked ? `Open ${project.name} live project` : undefined}
+      >
       <div className={styles.media} aria-hidden="true">
         <span className={styles.chrome}>
           <span className={styles.dots} />
           <span className={styles.host}>{host ?? project.slug}</span>
         </span>
-        <span className={styles.shot} data-blocks={spotlight ? 12 : 8}>
+        <span className={styles.shot}>
           {project.coverUrl ? (
             <Image
               src={project.coverUrl}
               alt=""
               fill
+              loading={project.index === "01" ? "eager" : "lazy"}
               sizes={
                 spotlight
                   ? "(max-width: 900px) 100vw, 60vw"
@@ -181,6 +185,7 @@ function ProjectCard({ project, variant }: { project: Project; variant: Variant 
         </span>
         <span className={styles.frame}>{project.index}</span>
       </div>
+      </a>
 
       <div className={styles.body}>
         <span className={styles.toast} aria-hidden="true">
